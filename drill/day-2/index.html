@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="drill-build" content="4e56727aa4">
+<title>Alexa SAT drill – Day 2</title>
+<style>
+
+:root{--navy:#24416b;--navy2:#2f5d9a;--sky:#e9f1fb;--line:#d5dbe5;--ink:#1b2330;--muted:#5c6776;--good:#1f8a4c;--warn:#c0392b;--flag:#d97706;--bg:#f6f8fb}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+.serif{font-family:Georgia,"Noto Serif","Times New Roman",serif}
+button{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+.btn{background:var(--navy2);color:#fff;border:0;border-radius:999px;padding:.6em 1.4em;font-weight:600;min-height:44px}
+.btn:hover{background:var(--navy)}
+.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy2)}
+.btn.big{font-size:1.15em;padding:.75em 2em}
+.btn.warn{background:var(--warn)}
+.btn:disabled{opacity:.45;cursor:default}
+/* screens */
+.screen{min-height:100%;display:flex;flex-direction:column}
+.card{background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(20,40,80,.08);padding:28px 30px;max-width:760px;width:calc(100% - 28px);margin:28px auto}
+.hero{text-align:center}
+.hero .emoji{font-size:54px;line-height:1.15;margin-bottom:4px}
+h1{font-size:1.8em;margin:.2em 0 .3em;color:var(--navy)}
+h2{color:var(--navy);margin:.2em 0 .5em}
+.kicker{letter-spacing:.18em;text-transform:uppercase;color:var(--navy2);font-size:.8em;font-weight:700}
+.field{display:flex;gap:10px;align-items:center;justify-content:center;margin:16px 0}
+.field input{font:inherit;padding:.5em .8em;border:2px solid var(--line);border-radius:10px;width:220px}
+table.plan{border-collapse:collapse;margin:10px auto;font-size:.95em}
+table.plan td,table.plan th{border-bottom:1px solid var(--line);padding:6px 14px;text-align:left}
+ul.tips{padding-left:1.2em} ul.tips li{margin:.3em 0}
+/* test layout */
+header.bar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px}
+header.bar .title{font-weight:700;color:var(--navy);font-size:.95em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timer{display:flex;flex-direction:column;align-items:center;min-width:92px}
+.timer .t{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.3em;letter-spacing:.03em}
+.timer .t.low{color:var(--warn)}
+.timer button{background:none;border:1px solid var(--line);border-radius:999px;font-size:.72em;padding:0 .8em;color:var(--muted)}
+.tools{flex:1;display:flex;justify-content:flex-end;gap:6px}
+.tool{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.35em .7em;font-size:.85em;color:var(--navy);min-height:40px}
+.tool:hover{background:var(--sky)}
+main.q{flex:1;display:flex;width:100%;max-width:1200px;margin:0 auto;padding:14px 14px 96px;gap:18px}
+.pane{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;flex:1;min-width:0}
+.pane.left{flex:1.1}
+.qhead{display:flex;align-items:center;justify-content:space-between;background:#eef2f7;border-radius:8px;padding:4px 6px 4px 4px;margin-bottom:12px}
+.qnum{background:var(--ink);color:#fff;font-weight:700;border-radius:6px;padding:2px 10px}
+.flagbtn{background:none;border:0;color:var(--muted);font-size:.9em;padding:.3em .6em;border-radius:8px;min-height:36px}
+.flagbtn.on{color:var(--flag);font-weight:700}
+.flagbtn .ic{display:inline-block;width:14px;height:16px;vertical-align:-2px;margin-right:4px}
+.passage{font-size:1.02em}
+.stem{font-weight:600;margin:4px 0 12px}
+.choice{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 10px;min-height:52px;color:var(--ink)}
+.choice:hover{border-color:var(--navy2)}
+.choice .L{flex:0 0 32px;height:32px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:system-ui,sans-serif}
+.choice.sel{border-color:var(--navy2);background:var(--sky);box-shadow:0 0 0 2px var(--navy2) inset}
+.choice.sel .L{background:var(--navy2);border-color:var(--navy2);color:#fff}
+.fig{text-align:center;margin:6px 0 12px} .fig img{max-width:100%;width:440px;height:auto}
+.shortt{display:none}
+.fig.small img{width:360px}
+ul.notes{margin:6px 0 10px;padding-left:1.3em} ul.notes li{margin:.25em 0}
+.eq{margin:4px 0 10px 18px;font-size:1.08em;line-height:1.6}
+.frac{display:inline-block;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.15;margin:0 2px}
+.frac .num{display:block;border-bottom:1px solid currentColor;padding:0 3px}.frac .den{display:block;padding:0 3px}
+sup{font-size:.7em;line-height:0}
+table.data{border-collapse:collapse;margin:8px auto 12px;font-size:.92em}
+table.data th,table.data td{border:1px solid #777;padding:4px 12px;text-align:center}
+table.data th{background:#eaf0f8} table.data caption{font-weight:700;margin-bottom:4px}
+table.grid{border-collapse:collapse;width:100%;font-size:.9em}
+table.grid th,table.grid td{border:1px solid #bbb;padding:6px 8px;vertical-align:top;text-align:left}
+table.grid th{background:#eaf0f8}
+.small{font-size:.88em;color:var(--muted)}
+/* grid-in */
+.spr{margin-top:10px}
+.spr label{font-weight:600;display:block;margin-bottom:6px}
+.spr input{font:inherit;font-size:1.4em;width:170px;padding:.3em .5em;border:2px solid var(--ink);border-radius:8px;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.spr .preview{margin-top:10px;font-size:1.1em}
+.spr .err{color:var(--warn);font-size:.9em;margin-top:6px;min-height:1.2em}
+.sprhelp{margin-top:16px;background:#f5f7fa;border-radius:10px;padding:10px 14px;font-size:.86em;color:var(--muted)}
+.sprhelp ul{margin:4px 0;padding-left:1.2em}
+/* footer */
+footer.nav{position:fixed;left:0;right:0;bottom:0;z-index:6;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+footer.nav .who{flex:1;font-weight:600;color:var(--muted);font-size:.9em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+footer.nav .mid{flex:0 0 auto}
+footer.nav .right{flex:1;display:flex;justify-content:flex-end;gap:8px}
+.navbtn{background:var(--ink);color:#fff;border:0;border-radius:8px;padding:.45em 1em;font-weight:600;min-height:40px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,25,45,.45);z-index:20;display:flex;align-items:center;justify-content:center;padding:14px}
+.modal .box{background:#fff;border-radius:16px;max-width:680px;width:100%;max-height:90vh;overflow:auto;padding:20px 22px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.modal .box h3{margin:0 0 10px;color:var(--navy)}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:8px;margin:12px 0}
+.navgrid button{position:relative;height:46px;border:2px dashed #8a94a3;background:#fff;border-radius:8px;font-weight:700;color:var(--navy)}
+.navgrid button.ans{border:2px solid var(--navy2);background:var(--navy2);color:#fff}
+.navgrid button.cur{outline:3px solid var(--ink);outline-offset:2px}
+.navgrid button.flg::after{content:"";position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--flag);border:2px solid #fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82em;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.legend .a::before{background:var(--navy2)} .legend .u::before{border:2px dashed #8a94a3} .legend .f::before{background:var(--flag);border-radius:50%}
+.row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+/* calculator */
+#calc{position:fixed;right:14px;bottom:78px;z-index:15;width:290px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.2);padding:12px}
+#calc .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700;color:var(--navy)}
+#calc input{width:100%;font-size:1.25em;text-align:right;padding:.35em .5em;border:2px solid var(--line);border-radius:8px;font-variant-numeric:tabular-nums}
+#calc .res{text-align:right;color:var(--muted);min-height:1.4em;font-size:.95em;margin:4px 2px}
+#calc .keys{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+#calc .keys button{height:42px;border:1px solid var(--line);border-radius:8px;background:#f5f7fa;font-weight:600}
+#calc .keys button.op{background:#e9f1fb;color:var(--navy)}
+#calc .keys button.eq{background:var(--navy2);color:#fff;grid-column:span 2}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;z-index:30;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+/* review & done */
+.revgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px;margin:14px 0}
+.revgrid button{height:52px;border:2px dashed #8a94a3;background:#fff;border-radius:8px;font-weight:700;color:var(--navy);position:relative}
+.revgrid button.ans{border:2px solid var(--navy2);background:var(--navy2);color:#fff}
+.revgrid button.flg::after{content:"";position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--flag);border:2px solid #fff}
+.stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.stat{background:var(--sky);border-radius:12px;padding:10px 16px;text-align:center;min-width:140px}
+.stat b{display:block;font-size:1.3em;color:var(--navy)}
+.resp{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin:8px 0 16px}
+.resp div{border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:.9em;background:#fff}
+.resp div b{color:var(--navy)} .resp div.blank{color:#9aa3af} .resp div.fl{border-color:var(--flag);background:#fff7ea}
+.send{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:18px 0 8px}
+.send a.btn{text-decoration:none;display:inline-flex;align-items:center}
+textarea.code{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8em;border:1px solid var(--line);border-radius:8px;padding:8px;height:92px;resize:vertical}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85em}
+@media (max-width:820px){
+  main.q{flex-direction:column;padding:10px 10px 96px;gap:10px}
+  .pane{padding:14px 14px}
+  body{font-size:16px}
+  .tool .lbl{display:none}
+  header.bar .title{font-size:.85em}
+  #calc{left:10px;right:10px;width:auto}
+  footer.nav .who{display:none}
+  header.bar .long{display:none} header.bar .shortt{display:inline}
+  footer.nav{justify-content:space-between}
+}
+/* ---- drill additions ---- */
+.timer .t.amber{color:var(--flag)} .timer .t.over{color:var(--warn)}
+.banner{background:#fff4e0;border-bottom:2px solid var(--flag);color:#7a4a00;text-align:center;padding:8px 12px;font-weight:600}
+.tipbox{background:#eef7ee;border:1px solid #bfe0c4;border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:.95em}
+.tipbox b.k{color:var(--good)}
+.hintbox{background:#fff7e6;border:1px solid #f3d29a;border-radius:12px;padding:10px 14px;margin:12px 0 0}
+.hintbtn{margin-top:12px;background:#fff;border:2px dashed var(--flag);color:#8a5200;border-radius:999px;padding:.35em 1em;font-weight:600;min-height:40px}
+.lvl{font-size:.75em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 9px;margin-left:6px}
+.lvl.warm{background:#e7f6ec;color:#1f7a44}.lvl.core{background:#e9f1fb;color:#2f5d9a}.lvl.stretch{background:#fbeaea;color:#a12b2b}
+.skilltag{color:var(--muted);font-size:.85em}
+.nudge{background:#fff7e6;border:1px solid #f3d29a;border-radius:12px;padding:10px 14px;margin:12px 0;text-align:left}
+.rev{border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;background:#fff}
+.rev.ok{border-left:6px solid var(--good)} .rev.no{border-left:6px solid var(--warn)} .rev.blank{border-left:6px solid #9aa3af}
+.rev .hd{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.rev .mark{font-weight:800} .rev.ok .mark{color:var(--good)} .rev.no .mark,.rev.blank .mark{color:var(--warn)}
+.rev .qtxt{font-size:.95em;margin:6px 0}
+.rev .ansrow{display:flex;gap:18px;flex-wrap:wrap;margin:6px 0;font-size:.95em}
+.rev .expl{background:#f5f7fa;border-radius:10px;padding:8px 12px;font-size:.93em}
+.rev .fig img{width:300px}
+.chip{display:inline-block;background:#fff7e6;border:1px solid #f3d29a;border-radius:999px;font-size:.75em;padding:1px 8px;color:#8a5200;margin-left:6px}
+.choice.right{border-color:var(--good);background:#eaf7ef} .choice.wrong{border-color:var(--warn);background:#fdeeee}
+.mini .choice{min-height:40px;padding:6px 10px;margin-bottom:6px;font-size:.92em;cursor:default}
+.mini .choice .L{flex-basis:26px;height:26px}
+.levelup{background:linear-gradient(90deg,#fff3c4,#e7f6ec);border:2px solid #f0c94a;border-radius:14px;padding:10px 16px;margin:10px 0;text-align:center;font-size:1.05em}
+.lvl.foundation{background:#f1ecfb;color:#5b3fa0}.lvl.hard{background:#2b2b2b;color:#ffd54a}
+.topics{text-align:left;margin:8px auto;max-width:520px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal" class="modal hidden"><div class="box" id="modalBox"></div></div>
+<div id="calc" class="hidden" role="dialog" aria-label="Calculator">
+  <div class="top"><span>Calculator</span><button class="tool" onclick="toggleCalc(false)">Close ✕</button></div>
+  <input id="calcIn" inputmode="decimal" autocomplete="off" placeholder="e.g. 2*(3+4)">
+  <div class="res" id="calcRes"></div>
+  <div class="keys" id="calcKeys"></div>
+</div>
+<template id="refTpl">
+<div>
+<table class='grid' style='font-size:9.5pt'>
+<tr><th>Shape / fact</th><th>Formula</th><th>Shape / fact</th><th>Formula</th></tr>
+<tr><td>Circle (radius <i>r</i>)</td><td>Area <i>A</i> = π<i>r</i><sup>2</sup><br>Circumference <i>C</i> = 2π<i>r</i></td><td>Rectangular prism (box)</td><td><i>V</i> = <i>ℓwh</i></td></tr>
+<tr><td>Rectangle</td><td><i>A</i> = <i>ℓw</i></td><td>Cylinder</td><td><i>V</i> = π<i>r</i><sup>2</sup><i>h</i></td></tr>
+<tr><td>Triangle</td><td><i>A</i> = ½<i>bh</i></td><td>Sphere</td><td><i>V</i> = <span class='frac'><span class='num'>4</span><span class='den'>3</span></span>π<i>r</i><sup>3</sup></td></tr>
+<tr><td>Right triangle (Pythagoras)</td><td><i>c</i><sup>2</sup> = <i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> (<i>c</i> = hypotenuse)</td><td>Cone</td><td><i>V</i> = <span class='frac'><span class='num'>1</span><span class='den'>3</span></span>π<i>r</i><sup>2</sup><i>h</i></td></tr>
+<tr><td>Special right triangles</td><td>30°–60°–90°: sides <i>x</i>, <i>x</i>√3, 2<i>x</i><br>45°–45°–90°: sides <i>s</i>, <i>s</i>, <i>s</i>√2</td><td>Pyramid (rectangular base)</td><td><i>V</i> = <span class='frac'><span class='num'>1</span><span class='den'>3</span></span><i>ℓwh</i></td></tr>
+</table>
+<p class='small' style='margin:5pt 0 0'>The number of degrees of arc in a circle is 360. The number of radians of arc in a circle is 2π. The sum of the measures in degrees of the angles of a triangle is 180.</p></div></template>
+<script>
+"use strict";
+const DATA = {"day": 2, "date": "2026-10-02", "items": [{"id": "M-vol-01", "section": "M", "skillCode": "vol", "skill": "Area & volume (cylinder, cone, sphere)", "level": "foundation", "type": "spr", "question": "A triangle has a base of 28 centimetres and a height of 6 centimetres. What is its area, in square centimetres?", "choices": null, "answer": ["84"], "explanation": "Area of a triangle = ½ × base × height = ½ × 28 × 6 = 84.", "hint": "Area of a triangle = ½ × base × height.", "tip": "Area of a triangle = ½ × base × height. Base 10, height 6 → ½ × 10 × 6 = 30."}, {"id": "M-exp-03", "section": "M", "skillCode": "exp", "skill": "Expanding brackets & equivalent expressions", "level": "foundation", "type": "mc", "question": "Which expression is equivalent to 3(<i>x<\/i> − 6)?", "choices": ["3<i>x<\/i> − 18", "<i>x<\/i> − 18", "3<i>x<\/i> − 3", "3<i>x<\/i> − 6"], "answer": "A", "explanation": "Multiply 3 by each term: 3·<i>x<\/i> = 3<i>x<\/i> and 3·(−6) = −18. So the answer is 3<i>x<\/i> − 18.", "hint": "Multiply the number outside the bracket by EVERY term inside.", "tip": "To expand 3(<i>x<\/i> + 4), multiply the 3 by <b>every<\/b> term inside: 3·<i>x<\/i> + 3·4 = 3<i>x<\/i> + 12."}, {"id": "M-cir-01", "section": "M", "skillCode": "cir", "skill": "Circles", "level": "foundation", "type": "spr", "question": "A circle has radius 11. Its area is <i>k<\/i>π square units. What is the value of <i>k<\/i>?", "choices": null, "answer": ["121"], "explanation": "Area = π<i>r<\/i>² = π × 11² = 121π, so <i>k<\/i> = 121.", "hint": "Area = πr².", "tip": "For a circle with radius <i>r<\/i>: area = π<i>r<\/i>², circumference = 2π<i>r<\/i>. The diameter is twice the radius."}, {"id": "R-dash-04", "section": "RW", "skillCode": "dash", "skill": "Boundaries: dashes & commas (extra information)", "level": "warm", "type": "mc", "question": "Mount Everest—the highest mountain above sea ______ sits on the border between Nepal and China.", "choices": ["level;", "level,", "level", "level—"], "answer": "D", "explanation": "Opened with a dash, so close with a dash.", "hint": "Dash … dash, or comma … comma.", "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?"}, {"id": "M-prb-01", "section": "M", "skillCode": "prb", "skill": "Two-way tables & probability", "level": "foundation", "type": "mc", "question": "A bag contains 8 red, 5 blue and 1 green counters. One counter is picked at random. What is the probability that it is blue?", "choices": ["<span class=\"frac\"><span class=\"num\">1<\/span><span class=\"den\">3<\/span><\/span>", "<span class=\"frac\"><span class=\"num\">5<\/span><span class=\"den\">14<\/span><\/span>", "<span class=\"frac\"><span class=\"num\">5<\/span><span class=\"den\">9<\/span><\/span>", "<span class=\"frac\"><span class=\"num\">9<\/span><span class=\"den\">14<\/span><\/span>"], "answer": "B", "explanation": "There are 8 + 5 + 1 = 14 counters, and 5 are blue. Probability = 5/14.", "hint": "Count the total number of counters first.", "tip": "Probability = (number of outcomes you want) ÷ (total number of equally likely outcomes). 3 red out of 10 counters → 3/10."}, {"id": "M-lin-04", "section": "M", "skillCode": "lin", "skill": "Straight-line graphs (slope & intercept)", "level": "warm", "type": "mc", "question": "What are the slope and the <i>y<\/i>-intercept of the line <i>y<\/i> = −5<i>x<\/i> + 10?", "choices": ["Slope −5; <i>y<\/i>-intercept 10", "Slope 5; <i>y<\/i>-intercept 10", "Slope −5; <i>y<\/i>-intercept −10", "Slope 10; <i>y<\/i>-intercept −5"], "answer": "A", "explanation": "In <i>y<\/i> = <i>m<\/i><i>x<\/i> + <i>c<\/i>, <i>m<\/i> is the slope and <i>c<\/i> is the <i>y<\/i>-intercept. Here <i>m<\/i> = −5 and <i>c<\/i> = 10.", "hint": "In y = mx + c, which letter is the slope?", "tip": "In <i>y<\/i> = <i>mx<\/i> + <i>c<\/i>, <i>m<\/i> is the slope (steepness) and <i>c<\/i> is where the line crosses the <i>y<\/i>-axis."}, {"id": "R-trans-07", "section": "RW", "skillCode": "trans", "skill": "Transitions", "level": "core", "type": "mc", "question": "Scientists expected the newly discovered frog to live only high in the rainforest canopy. ______ they found several of the frogs living on the forest floor.", "choices": ["However,", "Similarly,", "Therefore,", "For instance,"], "answer": "A", "explanation": "What they found was different from what they expected, so ‘However’ fits.", "hint": "Expected vs. what actually happened.", "stem": "Which choice completes the text with the most logical transition?"}, {"id": "M-sta-03", "section": "M", "skillCode": "sta", "skill": "Statistics: mean, median, outliers", "level": "warm", "type": "spr", "question": "What is the median of the data set 26, 35, 16, 10, 39, 3, 4?", "choices": null, "answer": ["16"], "explanation": "Put them in order: 3, 4, 10, 16, 26, 35, 39. The middle (4th) number is 16.", "hint": "Put them in order first!", "tip": "Mean = total ÷ how many. Median = the middle number when the list is in order (for an even count, the mean of the middle two)."}, {"id": "M-ang-06", "section": "M", "skillCode": "ang", "skill": "Angle facts (triangles, parallel lines)", "level": "core", "type": "spr", "question": "In the figure, the two horizontal lines are parallel. What is the value of <i>x<\/i>?", "choices": null, "answer": ["70"], "explanation": "One marked angle is small and the other is big, so together they make 180°: <i>x<\/i> = 180 − 110 = 70.", "hint": "Is x a ‘small’ angle or a ‘big’ angle? Compare it with the given angle.", "tip": "When a line crosses two parallel lines, all the ‘small’ (acute) angles are equal and all the ‘big’ (obtuse) angles are equal. A small angle + a big angle = 180°.", "img": "data:image/png;base64,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z23evFmbNm3SgQMHdODAAR08eFCbNm26rjoKCgqUlJTk25y0efNmXw1ffPGF7rzzTt+xO3bs0O233y5J2rZtm/r27et7bs2aNb7P2759u+69995LruOkxu3bt2v06NGXfNyrVy/Hr0ttmzdv1siRI30f5+Tk+N7Lu1zNP/3pT5WcnKyPPvpI+/bt04ABA9SzZ09JUrNmzXT27Fk9++yz+u1vf6ukpCSdOHFCb731ln71q19d8z5qq1371e6ztokTJ+pvf/ubCgoK1L9/f73yyiuSpE2bNmns2LE/OP5q91Xz/c26fF/h+m3btk3ffPONYmJiLvv1AsJB0INzzJgxWrt2rTZu3Oh7LDU1VevXr5eZaf369Xr66af161//WpKUn5+vli1b+s7VsmVLvf/++0pISFBSUpKSkpJ00003XVcdW7du9YWhdGlwJiUlKScnR2amjz76SK+88orv2O+//15FRUXyeDyaPXu2VqxYcUlw1jyn0xpzc3MvCeUtW7b4PnbyutSWmJiodevWycz04Ycf6o033rgkOGvXvH37dt13331q37695s+frzVr1viCLzk5WQUFBdq+fbvGjh2rxMREvf766xozZozvh5Cr3UdttWu/2n1ezsiRI/XSSy/p/vvv17FjxyRJLVq00KpVq35w7NXuq2Zw1uX7CtfvnXfekSSNGjVKaWlpLlcD3KBAL2nPnTtnDRo0sKKiIt9j48ePN0l28uRJM7vYMr355pstLi7OMjMzbcWKFb5jV65caU2bNrWmTZva1q1bLScnx7p06WLx8fGWmJhoSUlJdvbsWTO72G59+eWXr1jLo48+as8884zv406dOvnafUuXLrWEhARr0qSJPfzww9a2bVsrLS01s4vv8cXHx1tycrI9++yz1rhxY9/7gmlpaXbixIlLrnO1GmtLTU295PM7depk+/btc/y61Fbzfh555BFLSUmxo0ePXrHmp59+2mJjYy0lJcWeeuopa9asme+5I0eOmCTfZpv33nvPYmNj7eDBg9d1H7XVrv1q91nTrl27fK3UJk2a2MSJE62kpMTMLm6i6tChgzVs2NASExN9bdur3VfLli3t1KlTZnb1r9n06dMv2waGM1VVVZaSkmKSbN68eW6XA9ywemZmAQ5mnT17VomJib7HKisrde7cuUse8z7esGHDH5zD4/GopKRETZs2VUxM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"}, {"id": "R-semi-13", "section": "RW", "skillCode": "semi", "skill": "Boundaries: semicolons & colons", "level": "stretch", "type": "mc", "question": "Researchers tested three materials for the new running ______ rubber, foam, and recycled plastic.", "choices": ["track, which:", "track, these were:", "track:", "track;"], "answer": "C", "explanation": "A complete sentence followed by a list → colon. A semicolon can't introduce a list.", "hint": "List after a complete sentence?", "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?"}], "timeLimitSec": 900, "levels": ["foundation", "warm", "core", "stretch", "hard"], "ramp": {"promote": 2, "demote": 3, "fastSec": 600}, "skillState": {"exp": {"level": "foundation", "streak": 0, "missStreak": 0}, "ang": {"level": "warm", "streak": 0, "missStreak": 0}, "vol": {"level": "foundation", "streak": 0, "missStreak": 0}, "cir": {"level": "foundation", "streak": 0, "missStreak": 0}, "lin": {"level": "warm", "streak": 0, "missStreak": 0}, "sta": {"level": "warm", "streak": 0, "missStreak": 0}, "prb": {"level": "warm", "streak": 0, "missStreak": 0}, "semi": {"level": "core", "streak": 0, "missStreak": 0}, "dash": {"level": "warm", "streak": 0, "missStreak": 0}, "trans": {"level": "warm", "streak": 0, "missStreak": 0}}};
+const DAY = DATA.day, ITEMS = DATA.items, N = ITEMS.length, LIMIT = DATA.timeLimitSec || 900;
+const KEY = "alexaSatDrill_day" + DAY;
+const EMAILS = "Doris.s.chiu@gmail.com,francoisdemange@hotmail.com";
+const SUBJECT = "Alexa SAT drill Day " + DAY + " - results";
+const SKILLNAME = {exp:"expanding brackets",fn:"function notation",qf:"quadratics",vx:"vertex form",ang:"angles",vol:"area & volume",pyt:"Pythagoras & trig",cir:"circles",lin:"straight lines",sys:"systems",sta:"statistics",prb:"probability & tables",semi:"semicolons & colons",dash:"dashes & commas",trans:"transitions",wic:"words in context",evid:"evidence",synth:"rhetorical synthesis"};
+let S = null, tickTimer = null, warned2 = false;
+const $ = (id)=>document.getElementById(id);
+const esc = (t)=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fmt(sec){ sec=Math.max(0,Math.round(sec)); const m=Math.floor(sec/60), s=sec%60; return m+":"+String(s).padStart(2,"0"); }
+function toast(msg, ms){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), ms||3000); }
+function fresh(){ return {v:1, phase:"start", idx:0, ans:{}, hints:{}, startedAt:null, finishedAt:null, elapsedSec:null, results:null}; }
+function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s && s.v===1) return s; }catch(e){} return fresh(); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function openModal(html){ $("modalBox").innerHTML=html; $("modal").classList.remove("hidden"); }
+function closeModal(){ $("modal").classList.add("hidden"); $("modalBox").innerHTML=""; }
+$("modal").addEventListener("click",e=>{ if(e.target.id==="modal") closeModal(); });
+function elapsed(){ return S.startedAt ? ((S.finishedAt||Date.now())-S.startedAt)/1000 : 0; }
+const isM = (q)=>q.section==="M";
+
+/* ---------- timer (soft, like the Olympiad drill: amber under 2:00, banner at 0:00, she can still finish) ---------- */
+function tick(){
+  if(S.phase!=="q") return;
+  const left = LIMIT - elapsed(); const el=$("timeLeft");
+  if(el){ el.textContent = left>=0 ? fmt(left) : "+"+fmt(-left); el.classList.toggle("amber", left<120 && left>=0); el.classList.toggle("over", left<0); }
+  if(left<120 && left>0 && !warned2){ warned2=true; toast("2 minutes left – make sure every question has an answer!"); }
+  const b=$("timesUp"); if(b) b.classList.toggle("hidden", left>0);
+}
+function ensureTick(){ if(!tickTimer) tickTimer=setInterval(tick,250); }
+
+/* ---------- screens ---------- */
+function render(){
+  const app=$("app"); window.scrollTo(0,0);
+  if(S.phase==="start") app.innerHTML=startHTML();
+  else if(S.phase==="q"){ app.innerHTML=qScreenHTML(); bindQ(); }
+  else { app.innerHTML=doneHTML(); bindDone(); }
+  tick();
+}
+function startHTML(){
+  const nm=ITEMS.filter(isM).length, nr=N-nm;
+  const topics=[...new Set(ITEMS.map(q=>SKILLNAME[q.skillCode]))];
+  return `<div class="screen"><div class="card hero">
+  <div class="emoji">⚡</div><div class="kicker">Daily SAT drill · Day ${DAY}</div>
+  <h1>15-minute SAT drill</h1>
+  <p>${N} questions: <b>${nm} Maths</b> and <b>${nr} Reading &amp; Writing</b>. Today's topics: ${esc(topics.join(", "))}.</p>
+  <div class="nudge"><b>⭐ Golden rule: always guess, never leave a blank.</b> The SAT has no penalty for wrong answers, so a blank is always 0 – a guess might score. If you're stuck, cross out what you can, pick an answer and move on.</div>
+  <div style="text-align:left"><ul class="tips">
+   <li>The timer counts down from <b>15:00</b>. If it reaches zero you can still finish – just be quick.</li>
+   <li>Green <b>💡 Quick lesson</b> boxes teach a new idea – read them first, they're free.</li>
+   <li>Stuck? Press <b>Hint</b>. A right answer with a hint scores 1 point instead of 2.</li>
+   <li>Maths questions have a <b>📐 Reference</b> sheet and a <b>🧮 Calculator</b>.</li>
+   <li>After you submit you'll see the right answers and explanations. Then send your results to Mum.</li>
+  </ul></div>
+  <button class="btn big" id="startBtn" onclick="startDrill()">${S.startedAt?"Continue":"Start Day "+DAY}</button>
+  <p class="small" style="margin-top:14px">Your answers are saved on this device as you go.</p></div></div>`;
+}
+function startDrill(){ if(!S.startedAt) S.startedAt=Date.now(); S.phase="q"; save(); render(); }
+function qScreenHTML(){
+  const onCheck = S.idx>=N; const q = onCheck?null:ITEMS[S.idx];
+  const tools = (q && isM(q)) ? `<button class="tool" id="refBtn" onclick="showRef()">📐 <span class="lbl">Reference</span></button><button class="tool" id="calcBtn" onclick="toggleCalc()">🧮 <span class="lbl">Calculator</span></button>` : "";
+  const title = onCheck ? "Check your answers" : (isM(q)?"Maths":"Reading & Writing");
+  const body = onCheck ? checkHTML() : (isM(q)? mHTML(q) : rwHTML(q));
+  return `<div class="screen">
+  <header class="bar"><div class="title">Day ${DAY} · ${title}</div>
+   <div class="timer"><span class="t" id="timeLeft">--:--</span><button onclick="toggleTimer(this)">Hide</button></div>
+   <div class="tools">${tools}</div></header>
+  <div id="timesUp" class="banner hidden">⏰ Time's up! Finish quickly – put a guess in any blanks, then press Submit.</div>
+  ${body}
+  <footer class="nav"><div class="who">Alexa</div>
+   <div class="mid"><button class="navbtn" id="navOpen" onclick="showNav()">${onCheck?"Check":"Question "+(S.idx+1)+" of "+N} ▴</button></div>
+   <div class="right"><button class="navbtn" id="backBtn" ${S.idx===0?"disabled style='opacity:.4'":""} onclick="go(-1)">Back</button>
+   ${onCheck?`<button class="navbtn" style="background:var(--good)" id="submitBtn" onclick="trySubmit()">Submit</button>`:`<button class="navbtn" id="nextBtn" onclick="go(1)">Next</button>`}</div></footer></div>`;
+}
+function qhead(q){ return `<div class="qhead"><span><span class="qnum">${S.idx+1}</span><span class="lvl ${q.level}">${({foundation:"foundation",warm:"warm-up",core:"core",stretch:"stretch",hard:"SAT-hard"})[q.level]||q.level}</span></span><span class="skilltag">${esc(SKILLNAME[q.skillCode]||"")}</span></div>`; }
+function tipHTML(q){ return q.tip ? `<div class="tipbox"><b class="k">💡 Quick lesson:</b> ${q.tip}</div>` : ""; }
+function hintHTML(q){ return S.hints[q.id] ? `<div class="hintbox" id="hintBox"><b>Hint:</b> ${q.hint}</div>` : `<button class="hintbtn" id="hintBtn" onclick="useHint()">💡 Hint (right answer then scores 1 point)</button>`; }
+function choicesHTML(q, review){
+  const cur=S.ans[q.id];
+  return q.choices.map((c,i)=>{ const L="ABCD"[i];
+    let cls = cur===L?"sel":"";
+    if(review){ cls = L===q.answer ? "right" : (cur===L ? "wrong" : ""); }
+    return `<button class="choice ${cls}" data-l="${L}" ${review?"disabled":""} aria-pressed="${cur===L}"><span class="L">${L}</span><span class="serif">${c}</span></button>`; }).join("");
+}
+function rwHTML(q){
+  let left="";
+  if(q.table) left+=q.table;
+  left+=`<div class="passage serif">${q.question}</div>`;
+  if(q.notes) left+=`<ul class="notes serif">${q.notes.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  return `<main class="q"><section class="pane left">${tipHTML(q)}${left}</section>
+  <section class="pane">${qhead(q)}<div class="stem serif">${q.stem}</div>${choicesHTML(q)}${hintHTML(q)}</section></main>`;
+}
+function mHTML(q){
+  let h=qhead(q)+tipHTML(q);
+  if(q.table) h+=q.table;
+  if(q.img) h+=`<div class="fig"><img src="${q.img}" alt="Figure for question ${S.idx+1}"></div>`;
+  h+=`<div class="passage serif" style="margin-bottom:14px">${q.question}</div>`;
+  if(q.type==="mc") h+=choicesHTML(q);
+  else {
+    const v=S.ans[q.id]||"";
+    h+=`<div class="spr"><label for="sprIn">Your answer:</label><input id="sprIn" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="6" value="${esc(v)}">
+    <div class="preview">Answer preview: <b id="sprPrev"></b></div><div class="err" id="sprErr"></div></div>
+    <div class="sprhelp">Type a whole number, decimal or fraction, e.g. <b>12</b>, <b>3.5</b>, <b>7/2</b> or <b>-4</b>. No units or symbols.</div>`;
+  }
+  h+=hintHTML(q);
+  return `<main class="q" style="max-width:860px"><section class="pane">${h}</section></main>`;
+}
+function blanks(){ return ITEMS.map((q,i)=>i).filter(i=>!S.ans[ITEMS[i].id]); }
+function checkHTML(){
+  const bl=blanks();
+  const btns=ITEMS.map((q,i)=>`<button class="${S.ans[q.id]?"ans":""}" onclick="jump(${i})">${i+1}</button>`).join("");
+  return `<main class="q" style="max-width:860px"><section class="pane"><h2>Check your answers</h2>
+  <p>You have answered <b>${N-bl.length} of ${N}</b>. Tap a number to go back.</p>
+  ${bl.length?`<div class="nudge">⭐ <b>Never leave a blank!</b> Question${bl.length>1?"s":""} ${bl.map(i=>i+1).join(", ")} ${bl.length>1?"are":"is"} empty. A guess can only help you – go back and put something in.</div>`:`<div class="nudge">✅ Every question has an answer – that's the SAT habit we want!</div>`}
+  <div class="revgrid">${btns}</div>
+  <p class="small">When you're ready, press <b>Submit</b> to see your score and the answers.</p></section></main>`;
+}
+function bindQ(){
+  document.querySelectorAll(".choice").forEach(b=>b.addEventListener("click",()=>{
+    const q=ITEMS[S.idx]; const L=b.dataset.l; S.ans[q.id]=L; save();
+    document.querySelectorAll(".choice").forEach(x=>{ x.classList.toggle("sel",x.dataset.l===L); x.setAttribute("aria-pressed",x.dataset.l===L); });
+  }));
+  const inp=$("sprIn"); if(inp){ inp.addEventListener("input",sprInput); sprInput({target:inp, init:true}); }
+}
+function sprValid(v){
+  if(!v) return {ok:true};
+  if(v.length > (v[0]==="-"?6:5)) return {ok:false,msg:"Too many characters (max 5, or 6 with a minus sign)."};
+  if(!/^-?(\d+\.?\d*|\.\d+|\d+\/\d+)$/.test(v)) return {ok:false,msg:"Use a number like 12, 3.5, .75, 7/2 or -4."};
+  if(/\/0+$/.test(v)) return {ok:false,msg:"You can't divide by zero."};
+  return {ok:true};
+}
+function sprInput(e){
+  const inp=e.target; let v=inp.value.replace(/[−–—]/g,"-").replace(/\s+/g,"").replace(/[^0-9.\/\-]/g,"");
+  v=v.replace(/(?!^)-/g,""); if(v!==inp.value) inp.value=v;
+  const r=sprValid(v), q=ITEMS[S.idx];
+  $("sprErr").textContent = r.ok?"":r.msg;
+  let prev=""; if(v){ const m=v.match(/^(-?)(\d+)\/(\d+)$/); prev = m ? `${m[1]?"−":""}<span class="frac"><span class="num">${m[2]}</span><span class="den">${m[3]}</span></span>` : esc(v.replace("-","−")); }
+  $("sprPrev").innerHTML=prev;
+  if(!e.init){ if(v) S.ans[q.id]=v; else delete S.ans[q.id]; save(); }
+}
+function useHint(){ const q=ITEMS[S.idx]; S.hints[q.id]=true; save(); const b=$("hintBtn"); if(b) b.outerHTML=`<div class="hintbox" id="hintBox"><b>Hint:</b> ${q.hint}</div>`; }
+function go(d){ S.idx=Math.max(0,Math.min(N,S.idx+d)); save(); toggleCalc(false); render(); }
+function jump(i){ closeModal(); S.idx=i; save(); render(); }
+function toggleTimer(b){ const t=$("timeLeft"); const hid=t.style.visibility==="hidden"; t.style.visibility=hid?"visible":"hidden"; b.textContent=hid?"Hide":"Show"; }
+function showNav(){
+  const btns=ITEMS.map((q,i)=>`<button class="${S.ans[q.id]?"ans":""} ${i===S.idx?"cur":""}" onclick="jump(${i})">${i+1}</button>`).join("");
+  openModal(`<h3>Day ${DAY} – Questions</h3><div class="legend"><span class="a">Answered</span><span class="u">Not answered</span></div>
+  <div class="navgrid">${btns}</div><div class="row"><button class="btn ghost" onclick="closeModal()">Close</button><button class="btn" onclick="jump(${N})">Go to Check page</button></div>`);
+}
+function showRef(){ openModal(`<h3>Reference Sheet</h3>${$("refTpl").innerHTML}<div class="row"><button class="btn" onclick="closeModal()">Close</button></div>`); }
+function trySubmit(){
+  const bl=blanks();
+  if(bl.length){
+    openModal(`<h3>Wait – ${bl.length} blank${bl.length>1?"s":""}!</h3><p>⭐ Always guess, never leave a blank. Question${bl.length>1?"s":""} <b>${bl.map(i=>i+1).join(", ")}</b> ${bl.length>1?"have":"has"} no answer. A guess might score; a blank never does.</p>
+    <div class="row"><button class="btn ghost" id="mSubmit">Submit anyway</button><button class="btn" id="mGuess">Go back and guess</button></div>`);
+    $("mGuess").onclick=()=>jump(bl[0]); $("mSubmit").onclick=()=>{ closeModal(); submit(); };
+  } else submit();
+}
+
+/* ---------- marking ---------- */
+function num(v){ v=String(v).trim(); const m=v.match(/^(-?\d+)\/(\d+)$/); if(m) return Number(m[1])/Number(m[2]); return v===""?NaN:Number(v); }
+function isCorrect(q, a){
+  if(!a) return false;
+  if(q.type==="mc") return a===q.answer;
+  const u=num(a); if(!isFinite(u)) return false;
+  return q.answer.some(acc=>{ const v=num(acc); if(Math.abs(u-v)<1e-9) return true;
+    const isDec=/\./.test(a) && a.replace("-","").length>=5; return isDec && Math.abs(u-v)<0.001; });
+}
+function correctText(q){ return q.type==="mc" ? q.answer : q.answer[0]; }
+function submit(){
+  S.finishedAt=Date.now(); S.elapsedSec=Math.round(elapsed());
+  let score=0, nc=0;
+  const items=ITEMS.map(q=>{ const a=S.ans[q.id]||""; const ok=isCorrect(q,a); const h=!!S.hints[q.id];
+    if(ok){ nc++; score+= h?1:2; }
+    return {id:q.id, skill:q.skillCode, level:q.level, correct:ok, hintUsed:h, userAnswer:a, answer:correctText(q)}; });
+  const d=new Date(S.finishedAt); const ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  S.results={date:ds, day:DAY, score:score, maxScore:2*N, correctCount:nc, total:N, answered:N-blanks().length,
+    timeLimitSec:LIMIT, elapsedSec:S.elapsedSec, overTime:S.elapsedSec>LIMIT, items:items};
+  S.levelUps=computeLevelUps(items, S.elapsedSec);
+  S.phase="done"; toggleCalc(false); save(); render();
+}
+/* mirror of drill_lib.ramp_update (progress.json is updated for real when Mum ingests the results) */
+function computeLevelUps(items, el){
+  const LV=DATA.levels||[], R=DATA.ramp||{promote:2,fastSec:600}; const st=JSON.parse(JSON.stringify(DATA.skillState||{}));
+  const ups=[], promoted={};
+  items.forEach(i=>{ const s=st[i.skill]; if(!s) return; const cur=LV.indexOf(s.level), il=LV.indexOf(i.level);
+    if(i.correct && !i.hintUsed){ if(il>=cur){ s.streak=(s.streak||0)+1; if(s.streak>=R.promote && cur<LV.length-1){ ups.push({skill:i.skill,from:s.level,to:LV[cur+1],why:"2 right in a row"}); s.level=LV[cur+1]; s.streak=0; promoted[i.skill]=1; } } }
+    else s.streak=0; });
+  if(items.length && items.every(i=>i.correct&&!i.hintUsed) && el<=R.fastSec){
+    [...new Set(items.map(i=>i.skill))].forEach(c=>{ const s=st[c]; if(!s||promoted[c]) return; const cur=LV.indexOf(s.level);
+      if(cur<LV.length-1){ ups.push({skill:c,from:s.level,to:LV[cur+1],why:"fast perfect day"}); s.level=LV[cur+1]; } }); }
+  return ups;
+}
+function humanSummary(){
+  const r=S.results; const hints=r.items.filter(i=>i.hintUsed).length;
+  const missed=[...new Set(r.items.filter(i=>!i.correct).map(i=>SKILLNAME[i.skill]))];
+  return `Hi Mum and Francois,\n\nI finished SAT drill Day ${DAY}!\nScore: ${r.correctCount}/${r.total} correct (${r.score}/${r.maxScore} points), time ${fmt(r.elapsedSec)}, hints ${hints}.\n`+
+    (missed.length?`To practise: ${missed.join(", ")}.\n`:"All correct!\n");
+}
+function resultsBlock(level){
+  // level 0 = full; 1 = drop skill/level (re-filled from bank.json on ingest); 2 = also drop answer
+  const r=S.results;
+  const items=r.items.map(i=>{ const o={id:i.id}; if(level<1){ o.skill=i.skill; o.level=i.level; }
+    o.correct=i.correct; o.hintUsed=i.hintUsed; o.userAnswer=i.userAnswer; if(level<2) o.answer=i.answer; return o; });
+  const o={date:r.date, day:r.day, score:r.score, maxScore:r.maxScore, correctCount:r.correctCount, total:r.total, elapsedSec:r.elapsedSec, items:items};
+  return "RESULTS_JSON_START\n"+JSON.stringify(o)+"\nRESULTS_JSON_END";
+}
+function enc(s){ return encodeURIComponent(s).replace(/%2C/g,",").replace(/%3A/g,":").replace(/%40/g,"@").replace(/%2F/g,"/"); }
+function mailtoHref(){
+  for(let lv=0; lv<3; lv++){
+    const body=humanSummary()+"\n"+resultsBlock(lv)+"\n\nLove, Alexa";
+    const href="mailto:"+EMAILS+"?subject="+enc(SUBJECT)+"&body="+enc(body);
+    if(href.length<=1800 || lv===2) return href;
+  }
+}
+function copyText(){ return humanSummary()+"\n"+resultsBlock(0)+"\n\nLove, Alexa"; }
+function doneHTML(){
+  const r=S.results; const pct=Math.round(100*r.correctCount/r.total);
+  const emoji = pct>=80?"🏆":pct>=50?"🌟":"💪";
+  const cards=ITEMS.map((q,i)=>{ const it=r.items[i]; const a=it.userAnswer;
+    const cls = it.correct?"ok":(a?"no":"blank"); const mark = it.correct?"✓ Correct":(a?"✗ Not quite":"– Blank");
+    let body = "";
+    if(q.table) body+=q.table;
+    if(q.img) body+=`<div class="fig"><img src="${q.img}" alt="figure"></div>`;
+    body+=`<div class="qtxt serif">${q.question}</div>`;
+    if(q.notes) body+=`<ul class="notes serif">${q.notes.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+    if(q.stem) body+=`<div class="stem serif">${q.stem}</div>`;
+    if(q.type==="mc") body+=`<div class="mini">${choicesHTML(q,true)}</div>`;
+    else body+=`<div class="ansrow"><span>Your answer: <b>${a?esc(a.replace("-","−")):"(blank)"}</b></span><span>Correct answer: <b>${esc(q.answer[0].replace("-","−"))}</b>${q.answer.length>1?` <span class="small">(also accepted: ${esc(q.answer.slice(1).join(", "))})</span>`:""}</span></div>`;
+    if(q.type==="mc") body+=`<div class="ansrow"><span>Your answer: <b>${a||"(blank)"}</b></span><span>Correct answer: <b>${q.answer}</b></span></div>`;
+    body+=`<div class="expl"><b>Why:</b> ${q.explanation}</div>`;
+    return `<div class="rev ${cls}" id="rev${i+1}"><div class="hd"><span><span class="qnum">${i+1}</span> <span class="mark">${mark}</span>${it.hintUsed?'<span class="chip">hint used</span>':""}</span><span class="skilltag">${esc(SKILLNAME[q.skillCode])} · ${q.level}</span></div>${body}</div>`; }).join("");
+  const bl=r.items.filter(i=>!i.userAnswer).length;
+  return `<div class="screen"><div class="card"><div class="hero"><div class="emoji">${emoji}</div><div class="kicker">Day ${DAY} complete</div>
+  <h1 id="scoreLine">${r.correctCount} / ${r.total} correct</h1>
+  <div class="stats"><div class="stat">Points<b id="points">${r.score} / ${r.maxScore}</b>2 = right, 1 = right with hint</div>
+  <div class="stat">Time<b>${fmt(r.elapsedSec)}</b>${r.overTime?"over 15:00 – keep practising speed":"within 15:00 ✓"}</div>
+  <div class="stat">Blanks<b>${bl}</b>${bl?"remember: always guess!":"no blanks – great habit!"}</div></div></div>
+  ${(S.levelUps&&S.levelUps.length)?`<div class="levelup" id="levelUp"><b>🎉 Level up!</b> ${S.levelUps.map(u=>`${esc(SKILLNAME[u.skill])}: ${u.from} → <b>${u.to}</b>`).join(" · ")}<div class="small">Tomorrow's questions on ${S.levelUps.length>1?"these topics":"this topic"} will be a step harder.</div></div>`:""}
+  <div class="send"><a class="btn big" id="mailBtn" href="#">📧 Send my results to Mum</a><button class="btn ghost big" id="copyBtn">📋 Copy results</button></div>
+  <p class="small" style="text-align:center">If the email button doesn't open an email app, press <b>Copy results</b> and paste them into a message to Mum.</p>
+  <h2 style="margin-top:22px">Answers &amp; explanations</h2>
+  ${cards}
+  <label class="small" for="codeBox">Results code (for Mum):</label><textarea class="code" id="codeBox" readonly>${esc(resultsBlock(0))}</textarea>
+  <div style="text-align:center;margin-top:18px"><button class="link" id="resetBtn">Start Day ${DAY} again</button></div></div></div>`;
+}
+function bindDone(){
+  $("mailBtn").setAttribute("href", mailtoHref());
+  $("copyBtn").onclick=async()=>{ const txt=copyText(); let ok=false;
+    try{ await navigator.clipboard.writeText(txt); ok=true; }catch(e){}
+    if(!ok){ const ta=$("codeBox"); ta.value=txt; ta.focus(); ta.select(); try{ ok=document.execCommand("copy"); }catch(e){} }
+    toast(ok?"Results copied! Paste them into a message to Mum.":"Select the results code below and copy it."); };
+  $("resetBtn").onclick=()=>{ openModal(`<h3>Start again?</h3><p>This deletes today's answers on this device. Only do this after Mum has your results.</p><div class="row"><button class="btn ghost" onclick="closeModal()">Keep them</button><button class="btn warn" id="mReset">Delete and restart</button></div>`);
+    $("mReset").onclick=()=>{ closeModal(); S=fresh(); save(); render(); }; };
+}
+
+/* ---------- calculator (same as the diagnostic) ---------- */
+const CK=[["7","8","9","÷","("],["4","5","6","×",")"],["1","2","3","−","^"],["0",".","π","+","√"],["C","⌫","±","="]];
+function buildCalc(){
+  const k=$("calcKeys"); k.innerHTML="";
+  CK.flat().forEach(c=>{ const b=document.createElement("button"); b.textContent=c; b.type="button";
+    if("÷×−+^√()π±".includes(c)) b.className="op"; if(c==="=") b.className="eq"; b.onclick=()=>calcKey(c); k.appendChild(b); });
+  $("calcIn").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); calcKey("="); } });
+}
+function calcEval(src){
+  let s=src.replace(/×/g,"*").replace(/÷/g,"/").replace(/[−–]/g,"-").replace(/π/g,"PI").replace(/√/g,"sqrt").replace(/\^/g,"**").replace(/\s+/g,"");
+  s=s.replace(/(\d|\)|PI)(?=\(|PI|sqrt)/g,"$1*"); s=s.replace(/sqrt(\d+(?:\.\d+)?|PI)/g,"sqrt($1)");
+  if(!/^[0-9.+\-*/()]*$/.test(s.replace(/sqrt|PI/g,""))) throw new Error("bad");
+  const v=Function("sqrt","PI",'"use strict";return ('+s+');')(Math.sqrt,Math.PI);
+  if(typeof v!=="number"||!isFinite(v)) throw new Error("bad"); return Math.round(v*1e10)/1e10;
+}
+function calcKey(c){
+  const inp=$("calcIn");
+  if(c==="C"){ inp.value=""; $("calcRes").textContent=""; }
+  else if(c==="⌫"){ inp.value=inp.value.slice(0,-1); }
+  else if(c==="="){ try{ const v=calcEval(inp.value); $("calcRes").textContent=inp.value+" ="; inp.value=String(v); }catch(e){ $("calcRes").textContent="Error – check your brackets"; } }
+  else if(c==="±"){ inp.value = inp.value.startsWith("−(")&&inp.value.endsWith(")") ? inp.value.slice(2,-1) : (inp.value?"−("+inp.value+")":"−"); }
+  else if(c==="√"){ inp.value+="√("; } else inp.value+=c;
+}
+function toggleCalc(force){ const c=$("calc"); const show = force===undefined ? c.classList.contains("hidden") : force; c.classList.toggle("hidden",!show); if(show) $("calcIn").focus({preventScroll:true}); }
+
+S=load(); buildCalc(); render(); ensureTick();
+document.addEventListener("visibilitychange",tick);
+window.__drill={get S(){return S;}, mailtoHref, copyText, ITEMS};
+</script>
+</body>
+</html>
