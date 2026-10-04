@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="drill-build" content="6b9c426f0a">
+<title>Alexa SAT drill – Day 5</title>
+<style>
+
+:root{--navy:#24416b;--navy2:#2f5d9a;--sky:#e9f1fb;--line:#d5dbe5;--ink:#1b2330;--muted:#5c6776;--good:#1f8a4c;--warn:#c0392b;--flag:#d97706;--bg:#f6f8fb}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+.serif{font-family:Georgia,"Noto Serif","Times New Roman",serif}
+button{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+.btn{background:var(--navy2);color:#fff;border:0;border-radius:999px;padding:.6em 1.4em;font-weight:600;min-height:44px}
+.btn:hover{background:var(--navy)}
+.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy2)}
+.btn.big{font-size:1.15em;padding:.75em 2em}
+.btn.warn{background:var(--warn)}
+.btn:disabled{opacity:.45;cursor:default}
+/* screens */
+.screen{min-height:100%;display:flex;flex-direction:column}
+.card{background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(20,40,80,.08);padding:28px 30px;max-width:760px;width:calc(100% - 28px);margin:28px auto}
+.hero{text-align:center}
+.hero .emoji{font-size:54px;line-height:1.15;margin-bottom:4px}
+h1{font-size:1.8em;margin:.2em 0 .3em;color:var(--navy)}
+h2{color:var(--navy);margin:.2em 0 .5em}
+.kicker{letter-spacing:.18em;text-transform:uppercase;color:var(--navy2);font-size:.8em;font-weight:700}
+.field{display:flex;gap:10px;align-items:center;justify-content:center;margin:16px 0}
+.field input{font:inherit;padding:.5em .8em;border:2px solid var(--line);border-radius:10px;width:220px}
+table.plan{border-collapse:collapse;margin:10px auto;font-size:.95em}
+table.plan td,table.plan th{border-bottom:1px solid var(--line);padding:6px 14px;text-align:left}
+ul.tips{padding-left:1.2em} ul.tips li{margin:.3em 0}
+/* test layout */
+header.bar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px}
+header.bar .title{font-weight:700;color:var(--navy);font-size:.95em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timer{display:flex;flex-direction:column;align-items:center;min-width:92px}
+.timer .t{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.3em;letter-spacing:.03em}
+.timer .t.low{color:var(--warn)}
+.timer button{background:none;border:1px solid var(--line);border-radius:999px;font-size:.72em;padding:0 .8em;color:var(--muted)}
+.tools{flex:1;display:flex;justify-content:flex-end;gap:6px}
+.tool{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.35em .7em;font-size:.85em;color:var(--navy);min-height:40px}
+.tool:hover{background:var(--sky)}
+main.q{flex:1;display:flex;width:100%;max-width:1200px;margin:0 auto;padding:14px 14px 96px;gap:18px}
+.pane{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;flex:1;min-width:0}
+.pane.left{flex:1.1}
+.qhead{display:flex;align-items:center;justify-content:space-between;background:#eef2f7;border-radius:8px;padding:4px 6px 4px 4px;margin-bottom:12px}
+.qnum{background:var(--ink);color:#fff;font-weight:700;border-radius:6px;padding:2px 10px}
+.flagbtn{background:none;border:0;color:var(--muted);font-size:.9em;padding:.3em .6em;border-radius:8px;min-height:36px}
+.flagbtn.on{color:var(--flag);font-weight:700}
+.flagbtn .ic{display:inline-block;width:14px;height:16px;vertical-align:-2px;margin-right:4px}
+.passage{font-size:1.02em}
+.stem{font-weight:600;margin:4px 0 12px}
+.choice{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 10px;min-height:52px;color:var(--ink)}
+.choice:hover{border-color:var(--navy2)}
+.choice .L{flex:0 0 32px;height:32px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:system-ui,sans-serif}
+.choice.sel{border-color:var(--navy2);background:var(--sky);box-shadow:0 0 0 2px var(--navy2) inset}
+.choice.sel .L{background:var(--navy2);border-color:var(--navy2);color:#fff}
+.fig{text-align:center;margin:6px 0 12px} .fig img{max-width:100%;width:440px;height:auto}
+.shortt{display:none}
+.fig.small img{width:360px}
+ul.notes{margin:6px 0 10px;padding-left:1.3em} ul.notes li{margin:.25em 0}
+.eq{margin:4px 0 10px 18px;font-size:1.08em;line-height:1.6}
+.frac{display:inline-block;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.15;margin:0 2px}
+.frac .num{display:block;border-bottom:1px solid currentColor;padding:0 3px}.frac .den{display:block;padding:0 3px}
+sup{font-size:.7em;line-height:0}
+table.data{border-collapse:collapse;margin:8px auto 12px;font-size:.92em}
+table.data th,table.data td{border:1px solid #777;padding:4px 12px;text-align:center}
+table.data th{background:#eaf0f8} table.data caption{font-weight:700;margin-bottom:4px}
+table.grid{border-collapse:collapse;width:100%;font-size:.9em}
+table.grid th,table.grid td{border:1px solid #bbb;padding:6px 8px;vertical-align:top;text-align:left}
+table.grid th{background:#eaf0f8}
+.small{font-size:.88em;color:var(--muted)}
+/* grid-in */
+.spr{margin-top:10px}
+.spr label{font-weight:600;display:block;margin-bottom:6px}
+.spr input{font:inherit;font-size:1.4em;width:170px;padding:.3em .5em;border:2px solid var(--ink);border-radius:8px;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.spr .preview{margin-top:10px;font-size:1.1em}
+.spr .err{color:var(--warn);font-size:.9em;margin-top:6px;min-height:1.2em}
+.sprhelp{margin-top:16px;background:#f5f7fa;border-radius:10px;padding:10px 14px;font-size:.86em;color:var(--muted)}
+.sprhelp ul{margin:4px 0;padding-left:1.2em}
+/* footer */
+footer.nav{position:fixed;left:0;right:0;bottom:0;z-index:6;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+footer.nav .who{flex:1;font-weight:600;color:var(--muted);font-size:.9em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+footer.nav .mid{flex:0 0 auto}
+footer.nav .right{flex:1;display:flex;justify-content:flex-end;gap:8px}
+.navbtn{background:var(--ink);color:#fff;border:0;border-radius:8px;padding:.45em 1em;font-weight:600;min-height:40px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,25,45,.45);z-index:20;display:flex;align-items:center;justify-content:center;padding:14px}
+.modal .box{background:#fff;border-radius:16px;max-width:680px;width:100%;max-height:90vh;overflow:auto;padding:20px 22px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.modal .box h3{margin:0 0 10px;color:var(--navy)}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:8px;margin:12px 0}
+.navgrid button{position:relative;height:46px;border:2px dashed #8a94a3;background:#fff;border-radius:8px;font-weight:700;color:var(--navy)}
+.navgrid button.ans{border:2px solid var(--navy2);background:var(--navy2);color:#fff}
+.navgrid button.cur{outline:3px solid var(--ink);outline-offset:2px}
+.navgrid button.flg::after{content:"";position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--flag);border:2px solid #fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82em;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.legend .a::before{background:var(--navy2)} .legend .u::before{border:2px dashed #8a94a3} .legend .f::before{background:var(--flag);border-radius:50%}
+.row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+/* calculator */
+#calc{position:fixed;right:14px;bottom:78px;z-index:15;width:290px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.2);padding:12px}
+#calc .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700;color:var(--navy)}
+#calc input{width:100%;font-size:1.25em;text-align:right;padding:.35em .5em;border:2px solid var(--line);border-radius:8px;font-variant-numeric:tabular-nums}
+#calc .res{text-align:right;color:var(--muted);min-height:1.4em;font-size:.95em;margin:4px 2px}
+#calc .keys{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+#calc .keys button{height:42px;border:1px solid var(--line);border-radius:8px;background:#f5f7fa;font-weight:600}
+#calc .keys button.op{background:#e9f1fb;color:var(--navy)}
+#calc .keys button.eq{background:var(--navy2);color:#fff;grid-column:span 2}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;z-index:30;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+/* review & done */
+.revgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px;margin:14px 0}
+.revgrid button{height:52px;border:2px dashed #8a94a3;background:#fff;border-radius:8px;font-weight:700;color:var(--navy);position:relative}
+.revgrid button.ans{border:2px solid var(--navy2);background:var(--navy2);color:#fff}
+.revgrid button.flg::after{content:"";position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--flag);border:2px solid #fff}
+.stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.stat{background:var(--sky);border-radius:12px;padding:10px 16px;text-align:center;min-width:140px}
+.stat b{display:block;font-size:1.3em;color:var(--navy)}
+.resp{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin:8px 0 16px}
+.resp div{border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:.9em;background:#fff}
+.resp div b{color:var(--navy)} .resp div.blank{color:#9aa3af} .resp div.fl{border-color:var(--flag);background:#fff7ea}
+.send{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:18px 0 8px}
+.send a.btn{text-decoration:none;display:inline-flex;align-items:center}
+textarea.code{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8em;border:1px solid var(--line);border-radius:8px;padding:8px;height:92px;resize:vertical}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85em}
+@media (max-width:820px){
+  main.q{flex-direction:column;padding:10px 10px 96px;gap:10px}
+  .pane{padding:14px 14px}
+  body{font-size:16px}
+  .tool .lbl{display:none}
+  header.bar .title{font-size:.85em}
+  #calc{left:10px;right:10px;width:auto}
+  footer.nav .who{display:none}
+  header.bar .long{display:none} header.bar .shortt{display:inline}
+  footer.nav{justify-content:space-between}
+}
+/* ---- drill additions ---- */
+.timer .t.amber{color:var(--flag)} .timer .t.over{color:var(--warn)}
+.banner{background:#fff4e0;border-bottom:2px solid var(--flag);color:#7a4a00;text-align:center;padding:8px 12px;font-weight:600}
+.tipbox{background:#eef7ee;border:1px solid #bfe0c4;border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:.95em}
+.tipbox b.k{color:var(--good)}
+.hintbox{background:#fff7e6;border:1px solid #f3d29a;border-radius:12px;padding:10px 14px;margin:12px 0 0}
+.hintbtn{margin-top:12px;background:#fff;border:2px dashed var(--flag);color:#8a5200;border-radius:999px;padding:.35em 1em;font-weight:600;min-height:40px}
+.lvl{font-size:.75em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 9px;margin-left:6px}
+.lvl.warm{background:#e7f6ec;color:#1f7a44}.lvl.core{background:#e9f1fb;color:#2f5d9a}.lvl.stretch{background:#fbeaea;color:#a12b2b}
+.skilltag{color:var(--muted);font-size:.85em}
+.nudge{background:#fff7e6;border:1px solid #f3d29a;border-radius:12px;padding:10px 14px;margin:12px 0;text-align:left}
+.rev{border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;background:#fff}
+.rev.ok{border-left:6px solid var(--good)} .rev.no{border-left:6px solid var(--warn)} .rev.blank{border-left:6px solid #9aa3af}
+.rev .hd{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.rev .mark{font-weight:800} .rev.ok .mark{color:var(--good)} .rev.no .mark,.rev.blank .mark{color:var(--warn)}
+.rev .qtxt{font-size:.95em;margin:6px 0}
+.rev .ansrow{display:flex;gap:18px;flex-wrap:wrap;margin:6px 0;font-size:.95em}
+.rev .expl{background:#f5f7fa;border-radius:10px;padding:8px 12px;font-size:.93em}
+.rev .fig img{width:300px}
+.chip{display:inline-block;background:#fff7e6;border:1px solid #f3d29a;border-radius:999px;font-size:.75em;padding:1px 8px;color:#8a5200;margin-left:6px}
+.choice.right{border-color:var(--good);background:#eaf7ef} .choice.wrong{border-color:var(--warn);background:#fdeeee}
+.mini .choice{min-height:40px;padding:6px 10px;margin-bottom:6px;font-size:.92em;cursor:default}
+.mini .choice .L{flex-basis:26px;height:26px}
+.levelup{background:linear-gradient(90deg,#fff3c4,#e7f6ec);border:2px solid #f0c94a;border-radius:14px;padding:10px 16px;margin:10px 0;text-align:center;font-size:1.05em}
+.lvl.foundation{background:#f1ecfb;color:#5b3fa0}.lvl.hard{background:#2b2b2b;color:#ffd54a}
+.topics{text-align:left;margin:8px auto;max-width:520px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal" class="modal hidden"><div class="box" id="modalBox"></div></div>
+<div id="calc" class="hidden" role="dialog" aria-label="Calculator">
+  <div class="top"><span>Calculator</span><button class="tool" onclick="toggleCalc(false)">Close ✕</button></div>
+  <input id="calcIn" inputmode="decimal" autocomplete="off" placeholder="e.g. 2*(3+4)">
+  <div class="res" id="calcRes"></div>
+  <div class="keys" id="calcKeys"></div>
+</div>
+<template id="refTpl">
+<div>
+<table class='grid' style='font-size:9.5pt'>
+<tr><th>Shape / fact</th><th>Formula</th><th>Shape / fact</th><th>Formula</th></tr>
+<tr><td>Circle (radius <i>r</i>)</td><td>Area <i>A</i> = π<i>r</i><sup>2</sup><br>Circumference <i>C</i> = 2π<i>r</i></td><td>Rectangular prism (box)</td><td><i>V</i> = <i>ℓwh</i></td></tr>
+<tr><td>Rectangle</td><td><i>A</i> = <i>ℓw</i></td><td>Cylinder</td><td><i>V</i> = π<i>r</i><sup>2</sup><i>h</i></td></tr>
+<tr><td>Triangle</td><td><i>A</i> = ½<i>bh</i></td><td>Sphere</td><td><i>V</i> = <span class='frac'><span class='num'>4</span><span class='den'>3</span></span>π<i>r</i><sup>3</sup></td></tr>
+<tr><td>Right triangle (Pythagoras)</td><td><i>c</i><sup>2</sup> = <i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> (<i>c</i> = hypotenuse)</td><td>Cone</td><td><i>V</i> = <span class='frac'><span class='num'>1</span><span class='den'>3</span></span>π<i>r</i><sup>2</sup><i>h</i></td></tr>
+<tr><td>Special right triangles</td><td>30°–60°–90°: sides <i>x</i>, <i>x</i>√3, 2<i>x</i><br>45°–45°–90°: sides <i>s</i>, <i>s</i>, <i>s</i>√2</td><td>Pyramid (rectangular base)</td><td><i>V</i> = <span class='frac'><span class='num'>1</span><span class='den'>3</span></span><i>ℓwh</i></td></tr>
+</table>
+<p class='small' style='margin:5pt 0 0'>The number of degrees of arc in a circle is 360. The number of radians of arc in a circle is 2π. The sum of the measures in degrees of the angles of a triangle is 180.</p></div></template>
+<script>
+"use strict";
+const DATA = {"day": 5, "date": "2026-10-05", "items": [{"id": "M-fn-01", "section": "M", "skillCode": "fn", "skill": "Function notation", "level": "foundation", "type": "spr", "question": "The function <i>f<\/i> is defined by <i>f<\/i>(<i>x<\/i>) = −2<i>x<\/i> − 3. What is the value of <i>f<\/i>(−4)?", "choices": null, "answer": ["5"], "explanation": "Replace <i>x<\/i> with −4: (−2)·(−4) − 3 = 8 − 3 = 5.", "hint": "Put the number in the brackets wherever you see x.", "tip": "<i>f<\/i>(<i>x<\/i>) = 2<i>x<\/i> + 1 is a rule: ‘double it, then add 1’. To find <i>f<\/i>(4), replace every <i>x<\/i> with 4: 2·4 + 1 = 9."}, {"id": "M-vol-02", "section": "M", "skillCode": "vol", "skill": "Area & volume (cylinder, cone, sphere)", "level": "foundation", "type": "spr", "question": "A triangle has a base of 12 centimetres and a height of 5 centimetres. What is its area, in square centimetres?", "choices": null, "answer": ["30"], "explanation": "Area of a triangle = ½ × base × height = ½ × 12 × 5 = 30.", "hint": "Area of a triangle = ½ × base × height.", "tip": "Area of a triangle = ½ × base × height. Base 10, height 6 → ½ × 10 × 6 = 30."}, {"id": "M-ang-02", "section": "M", "skillCode": "ang", "skill": "Angle facts (triangles, parallel lines)", "level": "foundation", "type": "spr", "question": "In the triangle shown, what is the value of <i>x<\/i>?", "choices": null, "answer": ["70"], "explanation": "Angles in a triangle add to 180°: 180 − 53 − 57 = 70. Check: 53 + 57 + 70 = 180 ✓. (Always check your subtraction — it's an easy place to slip.)", "hint": "What do the three angles of a triangle add up to?", "tip": "Angles in a triangle add up to 180°. Example: if two angles are 50° and 60°, the third is 180 − 50 − 60 = 70°.", "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaIAAAEeCAYAAADIAxFhAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjExLjIsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvgI3uAAAAAAlwSFlzAAAQ6wAAEOsBUJTofAAAI0pJREFUeJzt3Xt4THceBvA3grjkQoRQogiqJUGaVrSJ6kYRjyCqSS/so1ZK6e2p1bJLt5cndV2ljzbF0qy6xrZbdyGM6J0SJWk2Lmm1SNgmQm5CZr77R9ZpJvfLTH5nZt7P8+zzNDNnznzPTHZec87JeZ1EREBERKRIE9UDEBGRY2MQERGRUgwiIiJSikFERERKMYiIiEgpBhERESnFICIiIqUYREREpBSDiIiIlGIQERGRUgwiIiJSikFERERKMYiIiEgpBhERESnFICIiIqUYREREpBSDiIiIlGIQERGRUgwiIiJSikFERERKMYiIiEgpBhERESnFICIiIqUYREREpBSDiIiIlGIQERGRUgwiIiJSikFERERKMYiIiEgpBhERESnFICIiIqUYREREpBSDiIiIlGIQERGRUgwiIiJSikFERERKMYiIiEgpBhERESnFICIiIqUYREREpBSDiIiIlGqqegBbkJ+fj1u3bqFFixYwmUxwdXVVPZLVFRQUQEQcYltrq6CgAADQunVrxZMQ2RddfiO6fv06srOzK9xWWFhY42MLCgq0D4yGMplMCA8PR5cuXTB79mzExMTgX//6l0XW3djq+rrMmzcPcXFx1huoDiz5njbErFmzsHnzZtVjENkdXQZReHg4unbtahY8ERER2LdvX42Pfe2117BhwwaLzLFnzx4UFhYiJycHa9euRUxMDCZPnmyRdTe2ur4u6enp8Pf3t+JEtWfJ97QhTp06pZvXhMie6C6IRAQnT57EoEGDsHfvXu325ORkBAQEaD+bTCbcuHHD7LHXr1/HqVOn0KFDB2RlZcFoNGr35eXlVXiu7OxsFBcXVzpHfn4+EhMT8eCDD+Lq1avIyspCVlYWTCaT2Qx3wvLq1asQEYgIrl69arauK1euaP99577CwsIK81c2Y3l31lVcXIybN29WuL+ur0tZIqJ98zhz5oz2oVvZzDk5OcjKysK1a9cqbENRUZE2S1ZWFkQEQOlremf9NW1HTbNXtp1VuX37Nq5cuWL2PpSdNysrS5u5qu0SEfz444/o169fhccTUQOJzqSnp0uHDh3k008/laeeekpERM6dOyeenp7aMu+99560bdtWXF1dxd/fXy5cuCAiIlFRUQJAvL29xdvbW65duyZr164VHx8fadu2rfj4+MjRo0dFRMRoNErPnj0lPT290jleffVVad68ubRt21ZbX8uWLaWkpERERJYuXSru7u7i4eEhMTEx4unpKSaTSU6ePCkDBgzQ1nP27Fnp3r27iIjk5uaKq6urzJgxQzw9PWXZsmUiIlXOWF5OTo64u7vLvHnzpF27dtK8eXPZunVrvV6X8t5//31p06aNeHh4yLvvvis9evSodubAwEDx9vYWDw8P6d69u5w5c0ZERObOnSvvvfeeiIjExcUJALly5YqIiAwdOlS++uqrGrejrMpmr2o7y8vPz5eIiAhxdXUVb29vs/dl69at4uvrq72/Bw8erHa7zp07J71799YeX9v3jIhqprsg2rx5s4wcOVIKCgrE29tbbt68KfHx8RIaGioiIhs3bpR+/frJ+fPnRaQ0MJ577jkREbl69ap06tRJW9e2bdtk9OjRkpaWJpmZmbJq1SoZPXp0rWfp2bOn9kF09uxZGTRokIiI7N69W/r27Su//vqrGI1GiYyMlD/84Q8iIrJmzRqJjo7W1rFx40Z5/PHHRUTEYDBI06ZNZdu2bfWaMTExUVxcXGTHjh0iIvLRRx/JuHHj6vy6lLd161bp27evXLhwQYxGo0RFRWkzVDbzHcXFxZKZmSnTpk2TmJgYERFZvHixvPXWW2IymeSBBx6QRx99VNLS0uTkyZPy8MMP17gd5ZWfvbrtLG/ZsmUyY8YMMRqNZrd//vnn4uPjIydPnqz0cZVt12effSYTJkwQkYb/XhGROd2dNXfixAkEBASgVatWGDx4MBITE7XbAGDp0qX44IMP0KNHDwDAAw88gB07dgAAvv32WwwaNEhb14IFC3Dp0iUMHTpUu63sf1cnNzcX2dnZ6NmzJwDg6NGj2gxvvPEGli9fji5dugAABg4cqO3KOXbsGB544AFtPceOHdMed+LECTz99NOYMGFCvWZMTk7Gk08+ifDwcABAq1at0K5duzq/LuUtWrQIy5YtQ9euXQEAAQEBuH79epUzHz9+HM8//zxSU1Ph6uqK69evIzY2FgDg6emJtLQ07N69G4GBgTCZ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"}, {"id": "R-dash-06", "section": "RW", "skillCode": "dash", "skill": "Boundaries: dashes & commas (extra information)", "level": "core", "type": "mc", "question": "The author's second novel—published when she was only ______ became a bestseller in twelve countries.", "choices": ["nineteen,", "nineteen—", "nineteen;", "nineteen"], "answer": "B", "explanation": "The interruption opened with a dash, so it must close with a dash.", "hint": "Match the opening punctuation.", "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?"}, {"id": "M-sta-01", "section": "M", "skillCode": "sta", "skill": "Statistics: mean, median, outliers", "level": "foundation", "type": "spr", "question": "What is the mean of the data set 13, 9, 11, 2, 20?", "choices": null, "answer": ["11"], "explanation": "Total = 13 + 9 + 11 + 2 + 20 = 55. Mean = 55 ÷ 5 = 11.", "hint": "Add them up and divide by how many numbers there are.", "tip": "Mean = total ÷ how many. Median = the middle number when the list is in order (for an even count, the mean of the middle two)."}, {"id": "M-ang-04", "section": "M", "skillCode": "ang", "skill": "Angle facts (triangles, parallel lines)", "level": "warm", "type": "spr", "question": "Points <i>A<\/i>, <i>B<\/i> and <i>C<\/i> lie on a straight line, with <i>B<\/i> between <i>A<\/i> and <i>C<\/i>. Point <i>D<\/i> is not on the line, and angle <i>ABD<\/i> = 110°. What is the measure, in degrees, of angle <i>DBC<\/i>?", "choices": null, "answer": ["70"], "explanation": "Angles on a straight line add to 180°: 180 − 110 = 70.", "hint": "Angles on a straight line add to…?", "tip": "Angles on a straight line add up to 180°. If one angle is 130°, the angle next to it is 180 − 130 = 50°."}, {"id": "R-trans-08", "section": "RW", "skillCode": "trans", "skill": "Transitions", "level": "core", "type": "mc", "question": "Sharks have lived on Earth for more than 400 million years. ______ they existed before the first trees appeared.", "choices": ["In contrast,", "However,", "Nevertheless,", "In fact,"], "answer": "D", "explanation": "The second sentence adds a striking detail that strengthens the first point, so ‘In fact’ fits. There is no contrast.", "hint": "Does the second sentence strengthen the first?", "stem": "Which choice completes the text with the most logical transition?"}, {"id": "M-fn-03", "section": "M", "skillCode": "fn", "skill": "Function notation", "level": "warm", "type": "spr", "question": "The function <i>f<\/i> is defined by <i>f<\/i>(<i>x<\/i>) = 2<i>x<\/i> − 6. What is the value of <i>f<\/i>(1)?", "choices": null, "answer": ["-4"], "explanation": "Replace <i>x<\/i> with 1: (2)·(1) − 6 = 2 − 6 = −4.", "hint": "Put the number in the brackets wherever you see x.", "tip": "<i>f<\/i>(<i>x<\/i>) = 2<i>x<\/i> + 1 is a rule: ‘double it, then add 1’. To find <i>f<\/i>(4), replace every <i>x<\/i> with 4: 2·4 + 1 = 9."}, {"id": "M-lin-05", "section": "M", "skillCode": "lin", "skill": "Straight-line graphs (slope & intercept)", "level": "core", "type": "spr", "question": "In the <i>xy<\/i>-plane, a line passes through the points (2, −1) and (3, −3). What is the <i>y<\/i>-coordinate of the <i>y<\/i>-intercept of the line?", "choices": null, "answer": ["3"], "explanation": "Slope = −2 ÷ 1 = −2. Use <i>y<\/i> = −2<i>x<\/i> + <i>c<\/i> with (2, −1): −1 = −4 + <i>c<\/i>, so <i>c<\/i> = 3.", "hint": "Find the slope first, then put one point into y = mx + c."}, {"id": "R-wic-07", "section": "RW", "skillCode": "wic", "skill": "Words in context", "level": "hard", "type": "mc", "question": "The historian's account of the treaty is notably ______: she presents the perspectives of all four nations involved without favouring any of them.", "choices": ["provocative", "exhaustive", "impartial", "speculative"], "answer": "C", "explanation": "‘without favouring any of them’ means fair and unbiased — impartial. ‘Exhaustive’ means covering everything, which the text doesn't claim.", "hint": "Which word means ‘not taking sides’?", "stem": "Which choice completes the text with the most logical and precise word or phrase?"}], "timeLimitSec": 900, "levels": ["foundation", "warm", "core", "stretch", "hard"], "ramp": {"promote": 2, "demote": 3, "fastSec": 600}, "skillState": {"fn": {"level": "foundation", "streak": 0, "missStreak": 1}, "ang": {"level": "warm", "streak": 0, "missStreak": 1}, "vol": {"level": "foundation", "streak": 0, "missStreak": 1}, "lin": {"level": "warm", "streak": 0, "missStreak": 1}, "sta": {"level": "warm", "streak": 0, "missStreak": 1}, "dash": {"level": "warm", "streak": 1, "missStreak": 0}, "trans": {"level": "warm", "streak": 1, "missStreak": 0}, "wic": {"level": "stretch", "streak": 0, "missStreak": 1}}};
+const DAY = DATA.day, ITEMS = DATA.items, N = ITEMS.length, LIMIT = DATA.timeLimitSec || 900;
+const KEY = "alexaSatDrill_day" + DAY;
+const EMAILS = "Doris.s.chiu@gmail.com,francoisdemange@hotmail.com";
+const SUBJECT = "Alexa SAT drill Day " + DAY + " - results";
+const SKILLNAME = {exp:"expanding brackets",fn:"function notation",qf:"quadratics",vx:"vertex form",ang:"angles",vol:"area & volume",pyt:"Pythagoras & trig",cir:"circles",lin:"straight lines",sys:"systems",sta:"statistics",prb:"probability & tables",semi:"semicolons & colons",dash:"dashes & commas",trans:"transitions",wic:"words in context",evid:"evidence",synth:"rhetorical synthesis"};
+let S = null, tickTimer = null, warned2 = false;
+const $ = (id)=>document.getElementById(id);
+const esc = (t)=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fmt(sec){ sec=Math.max(0,Math.round(sec)); const m=Math.floor(sec/60), s=sec%60; return m+":"+String(s).padStart(2,"0"); }
+function toast(msg, ms){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), ms||3000); }
+function fresh(){ return {v:1, phase:"start", idx:0, ans:{}, hints:{}, startedAt:null, finishedAt:null, elapsedSec:null, results:null}; }
+function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s && s.v===1) return s; }catch(e){} return fresh(); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function openModal(html){ $("modalBox").innerHTML=html; $("modal").classList.remove("hidden"); }
+function closeModal(){ $("modal").classList.add("hidden"); $("modalBox").innerHTML=""; }
+$("modal").addEventListener("click",e=>{ if(e.target.id==="modal") closeModal(); });
+function elapsed(){ return S.startedAt ? ((S.finishedAt||Date.now())-S.startedAt)/1000 : 0; }
+const isM = (q)=>q.section==="M";
+
+/* ---------- timer (soft, like the Olympiad drill: amber under 2:00, banner at 0:00, she can still finish) ---------- */
+function tick(){
+  if(S.phase!=="q") return;
+  const left = LIMIT - elapsed(); const el=$("timeLeft");
+  if(el){ el.textContent = left>=0 ? fmt(left) : "+"+fmt(-left); el.classList.toggle("amber", left<120 && left>=0); el.classList.toggle("over", left<0); }
+  if(left<120 && left>0 && !warned2){ warned2=true; toast("2 minutes left – make sure every question has an answer!"); }
+  const b=$("timesUp"); if(b) b.classList.toggle("hidden", left>0);
+}
+function ensureTick(){ if(!tickTimer) tickTimer=setInterval(tick,250); }
+
+/* ---------- screens ---------- */
+function render(){
+  const app=$("app"); window.scrollTo(0,0);
+  if(S.phase==="start") app.innerHTML=startHTML();
+  else if(S.phase==="q"){ app.innerHTML=qScreenHTML(); bindQ(); }
+  else { app.innerHTML=doneHTML(); bindDone(); }
+  tick();
+}
+function startHTML(){
+  const nm=ITEMS.filter(isM).length, nr=N-nm;
+  const topics=[...new Set(ITEMS.map(q=>SKILLNAME[q.skillCode]))];
+  return `<div class="screen"><div class="card hero">
+  <div class="emoji">⚡</div><div class="kicker">Daily SAT drill · Day ${DAY}</div>
+  <h1>15-minute SAT drill</h1>
+  <p>${N} questions: <b>${nm} Maths</b> and <b>${nr} Reading &amp; Writing</b>. Today's topics: ${esc(topics.join(", "))}.</p>
+  <div class="nudge"><b>⭐ Golden rule: always guess, never leave a blank.</b> The SAT has no penalty for wrong answers, so a blank is always 0 – a guess might score. If you're stuck, cross out what you can, pick an answer and move on.</div>
+  <div style="text-align:left"><ul class="tips">
+   <li>The timer counts down from <b>15:00</b>. If it reaches zero you can still finish – just be quick.</li>
+   <li>Green <b>💡 Quick lesson</b> boxes teach a new idea – read them first, they're free.</li>
+   <li>Stuck? Press <b>Hint</b>. A right answer with a hint scores 1 point instead of 2.</li>
+   <li>Maths questions have a <b>📐 Reference</b> sheet and a <b>🧮 Calculator</b>.</li>
+   <li>After you submit you'll see the right answers and explanations. Then send your results to Mum.</li>
+  </ul></div>
+  <button class="btn big" id="startBtn" onclick="startDrill()">${S.startedAt?"Continue":"Start Day "+DAY}</button>
+  <p class="small" style="margin-top:14px">Your answers are saved on this device as you go.</p></div></div>`;
+}
+function startDrill(){ if(!S.startedAt) S.startedAt=Date.now(); S.phase="q"; save(); render(); }
+function qScreenHTML(){
+  const onCheck = S.idx>=N; const q = onCheck?null:ITEMS[S.idx];
+  const tools = (q && isM(q)) ? `<button class="tool" id="refBtn" onclick="showRef()">📐 <span class="lbl">Reference</span></button><button class="tool" id="calcBtn" onclick="toggleCalc()">🧮 <span class="lbl">Calculator</span></button>` : "";
+  const title = onCheck ? "Check your answers" : (isM(q)?"Maths":"Reading & Writing");
+  const body = onCheck ? checkHTML() : (isM(q)? mHTML(q) : rwHTML(q));
+  return `<div class="screen">
+  <header class="bar"><div class="title">Day ${DAY} · ${title}</div>
+   <div class="timer"><span class="t" id="timeLeft">--:--</span><button onclick="toggleTimer(this)">Hide</button></div>
+   <div class="tools">${tools}</div></header>
+  <div id="timesUp" class="banner hidden">⏰ Time's up! Finish quickly – put a guess in any blanks, then press Submit.</div>
+  ${body}
+  <footer class="nav"><div class="who">Alexa</div>
+   <div class="mid"><button class="navbtn" id="navOpen" onclick="showNav()">${onCheck?"Check":"Question "+(S.idx+1)+" of "+N} ▴</button></div>
+   <div class="right"><button class="navbtn" id="backBtn" ${S.idx===0?"disabled style='opacity:.4'":""} onclick="go(-1)">Back</button>
+   ${onCheck?`<button class="navbtn" style="background:var(--good)" id="submitBtn" onclick="trySubmit()">Submit</button>`:`<button class="navbtn" id="nextBtn" onclick="go(1)">Next</button>`}</div></footer></div>`;
+}
+function qhead(q){ return `<div class="qhead"><span><span class="qnum">${S.idx+1}</span><span class="lvl ${q.level}">${({foundation:"foundation",warm:"warm-up",core:"core",stretch:"stretch",hard:"SAT-hard"})[q.level]||q.level}</span></span><span class="skilltag">${esc(SKILLNAME[q.skillCode]||"")}</span></div>`; }
+function tipHTML(q){ return q.tip ? `<div class="tipbox"><b class="k">💡 Quick lesson:</b> ${q.tip}</div>` : ""; }
+function hintHTML(q){ return S.hints[q.id] ? `<div class="hintbox" id="hintBox"><b>Hint:</b> ${q.hint}</div>` : `<button class="hintbtn" id="hintBtn" onclick="useHint()">💡 Hint (right answer then scores 1 point)</button>`; }
+function choicesHTML(q, review){
+  const cur=S.ans[q.id];
+  return q.choices.map((c,i)=>{ const L="ABCD"[i];
+    let cls = cur===L?"sel":"";
+    if(review){ cls = L===q.answer ? "right" : (cur===L ? "wrong" : ""); }
+    return `<button class="choice ${cls}" data-l="${L}" ${review?"disabled":""} aria-pressed="${cur===L}"><span class="L">${L}</span><span class="serif">${c}</span></button>`; }).join("");
+}
+function rwHTML(q){
+  let left="";
+  if(q.table) left+=q.table;
+  left+=`<div class="passage serif">${q.question}</div>`;
+  if(q.notes) left+=`<ul class="notes serif">${q.notes.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  return `<main class="q"><section class="pane left">${tipHTML(q)}${left}</section>
+  <section class="pane">${qhead(q)}<div class="stem serif">${q.stem}</div>${choicesHTML(q)}${hintHTML(q)}</section></main>`;
+}
+function mHTML(q){
+  let h=qhead(q)+tipHTML(q);
+  if(q.table) h+=q.table;
+  if(q.img) h+=`<div class="fig"><img src="${q.img}" alt="Figure for question ${S.idx+1}"></div>`;
+  h+=`<div class="passage serif" style="margin-bottom:14px">${q.question}</div>`;
+  if(q.type==="mc") h+=choicesHTML(q);
+  else {
+    const v=S.ans[q.id]||"";
+    h+=`<div class="spr"><label for="sprIn">Your answer:</label><input id="sprIn" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="6" value="${esc(v)}">
+    <div class="preview">Answer preview: <b id="sprPrev"></b></div><div class="err" id="sprErr"></div></div>
+    <div class="sprhelp">Type a whole number, decimal or fraction, e.g. <b>12</b>, <b>3.5</b>, <b>7/2</b> or <b>-4</b>. No units or symbols.</div>`;
+  }
+  h+=hintHTML(q);
+  return `<main class="q" style="max-width:860px"><section class="pane">${h}</section></main>`;
+}
+function blanks(){ return ITEMS.map((q,i)=>i).filter(i=>!S.ans[ITEMS[i].id]); }
+function checkHTML(){
+  const bl=blanks();
+  const btns=ITEMS.map((q,i)=>`<button class="${S.ans[q.id]?"ans":""}" onclick="jump(${i})">${i+1}</button>`).join("");
+  return `<main class="q" style="max-width:860px"><section class="pane"><h2>Check your answers</h2>
+  <p>You have answered <b>${N-bl.length} of ${N}</b>. Tap a number to go back.</p>
+  ${bl.length?`<div class="nudge">⭐ <b>Never leave a blank!</b> Question${bl.length>1?"s":""} ${bl.map(i=>i+1).join(", ")} ${bl.length>1?"are":"is"} empty. A guess can only help you – go back and put something in.</div>`:`<div class="nudge">✅ Every question has an answer – that's the SAT habit we want!</div>`}
+  <div class="revgrid">${btns}</div>
+  <p class="small">When you're ready, press <b>Submit</b> to see your score and the answers.</p></section></main>`;
+}
+function bindQ(){
+  document.querySelectorAll(".choice").forEach(b=>b.addEventListener("click",()=>{
+    const q=ITEMS[S.idx]; const L=b.dataset.l; S.ans[q.id]=L; save();
+    document.querySelectorAll(".choice").forEach(x=>{ x.classList.toggle("sel",x.dataset.l===L); x.setAttribute("aria-pressed",x.dataset.l===L); });
+  }));
+  const inp=$("sprIn"); if(inp){ inp.addEventListener("input",sprInput); sprInput({target:inp, init:true}); }
+}
+function sprValid(v){
+  if(!v) return {ok:true};
+  if(v.length > (v[0]==="-"?6:5)) return {ok:false,msg:"Too many characters (max 5, or 6 with a minus sign)."};
+  if(!/^-?(\d+\.?\d*|\.\d+|\d+\/\d+)$/.test(v)) return {ok:false,msg:"Use a number like 12, 3.5, .75, 7/2 or -4."};
+  if(/\/0+$/.test(v)) return {ok:false,msg:"You can't divide by zero."};
+  return {ok:true};
+}
+function sprInput(e){
+  const inp=e.target; let v=inp.value.replace(/[−–—]/g,"-").replace(/\s+/g,"").replace(/[^0-9.\/\-]/g,"");
+  v=v.replace(/(?!^)-/g,""); if(v!==inp.value) inp.value=v;
+  const r=sprValid(v), q=ITEMS[S.idx];
+  $("sprErr").textContent = r.ok?"":r.msg;
+  let prev=""; if(v){ const m=v.match(/^(-?)(\d+)\/(\d+)$/); prev = m ? `${m[1]?"−":""}<span class="frac"><span class="num">${m[2]}</span><span class="den">${m[3]}</span></span>` : esc(v.replace("-","−")); }
+  $("sprPrev").innerHTML=prev;
+  if(!e.init){ if(v) S.ans[q.id]=v; else delete S.ans[q.id]; save(); }
+}
+function useHint(){ const q=ITEMS[S.idx]; S.hints[q.id]=true; save(); const b=$("hintBtn"); if(b) b.outerHTML=`<div class="hintbox" id="hintBox"><b>Hint:</b> ${q.hint}</div>`; }
+function go(d){ S.idx=Math.max(0,Math.min(N,S.idx+d)); save(); toggleCalc(false); render(); }
+function jump(i){ closeModal(); S.idx=i; save(); render(); }
+function toggleTimer(b){ const t=$("timeLeft"); const hid=t.style.visibility==="hidden"; t.style.visibility=hid?"visible":"hidden"; b.textContent=hid?"Hide":"Show"; }
+function showNav(){
+  const btns=ITEMS.map((q,i)=>`<button class="${S.ans[q.id]?"ans":""} ${i===S.idx?"cur":""}" onclick="jump(${i})">${i+1}</button>`).join("");
+  openModal(`<h3>Day ${DAY} – Questions</h3><div class="legend"><span class="a">Answered</span><span class="u">Not answered</span></div>
+  <div class="navgrid">${btns}</div><div class="row"><button class="btn ghost" onclick="closeModal()">Close</button><button class="btn" onclick="jump(${N})">Go to Check page</button></div>`);
+}
+function showRef(){ openModal(`<h3>Reference Sheet</h3>${$("refTpl").innerHTML}<div class="row"><button class="btn" onclick="closeModal()">Close</button></div>`); }
+function trySubmit(){
+  const bl=blanks();
+  if(bl.length){
+    openModal(`<h3>Wait – ${bl.length} blank${bl.length>1?"s":""}!</h3><p>⭐ Always guess, never leave a blank. Question${bl.length>1?"s":""} <b>${bl.map(i=>i+1).join(", ")}</b> ${bl.length>1?"have":"has"} no answer. A guess might score; a blank never does.</p>
+    <div class="row"><button class="btn ghost" id="mSubmit">Submit anyway</button><button class="btn" id="mGuess">Go back and guess</button></div>`);
+    $("mGuess").onclick=()=>jump(bl[0]); $("mSubmit").onclick=()=>{ closeModal(); submit(); };
+  } else submit();
+}
+
+/* ---------- marking ---------- */
+function num(v){ v=String(v).trim(); const m=v.match(/^(-?\d+)\/(\d+)$/); if(m) return Number(m[1])/Number(m[2]); return v===""?NaN:Number(v); }
+function isCorrect(q, a){
+  if(!a) return false;
+  if(q.type==="mc") return a===q.answer;
+  const u=num(a); if(!isFinite(u)) return false;
+  return q.answer.some(acc=>{ const v=num(acc); if(Math.abs(u-v)<1e-9) return true;
+    const isDec=/\./.test(a) && a.replace("-","").length>=5; return isDec && Math.abs(u-v)<0.001; });
+}
+function correctText(q){ return q.type==="mc" ? q.answer : q.answer[0]; }
+function submit(){
+  S.finishedAt=Date.now(); S.elapsedSec=Math.round(elapsed());
+  let score=0, nc=0;
+  const items=ITEMS.map(q=>{ const a=S.ans[q.id]||""; const ok=isCorrect(q,a); const h=!!S.hints[q.id];
+    if(ok){ nc++; score+= h?1:2; }
+    return {id:q.id, skill:q.skillCode, level:q.level, correct:ok, hintUsed:h, userAnswer:a, answer:correctText(q)}; });
+  const d=new Date(S.finishedAt); const ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  S.results={date:ds, day:DAY, score:score, maxScore:2*N, correctCount:nc, total:N, answered:N-blanks().length,
+    timeLimitSec:LIMIT, elapsedSec:S.elapsedSec, overTime:S.elapsedSec>LIMIT, items:items};
+  S.levelUps=computeLevelUps(items, S.elapsedSec);
+  S.phase="done"; toggleCalc(false); save(); render();
+}
+/* mirror of drill_lib.ramp_update (progress.json is updated for real when Mum ingests the results) */
+function computeLevelUps(items, el){
+  const LV=DATA.levels||[], R=DATA.ramp||{promote:2,fastSec:600}; const st=JSON.parse(JSON.stringify(DATA.skillState||{}));
+  const ups=[], promoted={};
+  items.forEach(i=>{ const s=st[i.skill]; if(!s) return; const cur=LV.indexOf(s.level), il=LV.indexOf(i.level);
+    if(i.correct && !i.hintUsed){ if(il>=cur){ s.streak=(s.streak||0)+1; if(s.streak>=R.promote && cur<LV.length-1){ ups.push({skill:i.skill,from:s.level,to:LV[cur+1],why:"2 right in a row"}); s.level=LV[cur+1]; s.streak=0; promoted[i.skill]=1; } } }
+    else s.streak=0; });
+  if(items.length && items.every(i=>i.correct&&!i.hintUsed) && el<=R.fastSec){
+    [...new Set(items.map(i=>i.skill))].forEach(c=>{ const s=st[c]; if(!s||promoted[c]) return; const cur=LV.indexOf(s.level);
+      if(cur<LV.length-1){ ups.push({skill:c,from:s.level,to:LV[cur+1],why:"fast perfect day"}); s.level=LV[cur+1]; } }); }
+  return ups;
+}
+function humanSummary(){
+  const r=S.results; const hints=r.items.filter(i=>i.hintUsed).length;
+  const missed=[...new Set(r.items.filter(i=>!i.correct).map(i=>SKILLNAME[i.skill]))];
+  return `Hi Mum and Francois,\n\nI finished SAT drill Day ${DAY}!\nScore: ${r.correctCount}/${r.total} correct (${r.score}/${r.maxScore} points), time ${fmt(r.elapsedSec)}, hints ${hints}.\n`+
+    (missed.length?`To practise: ${missed.join(", ")}.\n`:"All correct!\n");
+}
+function resultsBlock(level){
+  // level 0 = full; 1 = drop skill/level (re-filled from bank.json on ingest); 2 = also drop answer
+  const r=S.results;
+  const items=r.items.map(i=>{ const o={id:i.id}; if(level<1){ o.skill=i.skill; o.level=i.level; }
+    o.correct=i.correct; o.hintUsed=i.hintUsed; o.userAnswer=i.userAnswer; if(level<2) o.answer=i.answer; return o; });
+  const o={date:r.date, day:r.day, score:r.score, maxScore:r.maxScore, correctCount:r.correctCount, total:r.total, elapsedSec:r.elapsedSec, items:items};
+  return "RESULTS_JSON_START\n"+JSON.stringify(o)+"\nRESULTS_JSON_END";
+}
+function enc(s){ return encodeURIComponent(s).replace(/%2C/g,",").replace(/%3A/g,":").replace(/%40/g,"@").replace(/%2F/g,"/"); }
+function mailtoHref(){
+  for(let lv=0; lv<3; lv++){
+    const body=humanSummary()+"\n"+resultsBlock(lv)+"\n\nLove, Alexa";
+    const href="mailto:"+EMAILS+"?subject="+enc(SUBJECT)+"&body="+enc(body);
+    if(href.length<=1800 || lv===2) return href;
+  }
+}
+function copyText(){ return humanSummary()+"\n"+resultsBlock(0)+"\n\nLove, Alexa"; }
+function doneHTML(){
+  const r=S.results; const pct=Math.round(100*r.correctCount/r.total);
+  const emoji = pct>=80?"🏆":pct>=50?"🌟":"💪";
+  const cards=ITEMS.map((q,i)=>{ const it=r.items[i]; const a=it.userAnswer;
+    const cls = it.correct?"ok":(a?"no":"blank"); const mark = it.correct?"✓ Correct":(a?"✗ Not quite":"– Blank");
+    let body = "";
+    if(q.table) body+=q.table;
+    if(q.img) body+=`<div class="fig"><img src="${q.img}" alt="figure"></div>`;
+    body+=`<div class="qtxt serif">${q.question}</div>`;
+    if(q.notes) body+=`<ul class="notes serif">${q.notes.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+    if(q.stem) body+=`<div class="stem serif">${q.stem}</div>`;
+    if(q.type==="mc") body+=`<div class="mini">${choicesHTML(q,true)}</div>`;
+    else body+=`<div class="ansrow"><span>Your answer: <b>${a?esc(a.replace("-","−")):"(blank)"}</b></span><span>Correct answer: <b>${esc(q.answer[0].replace("-","−"))}</b>${q.answer.length>1?` <span class="small">(also accepted: ${esc(q.answer.slice(1).join(", "))})</span>`:""}</span></div>`;
+    if(q.type==="mc") body+=`<div class="ansrow"><span>Your answer: <b>${a||"(blank)"}</b></span><span>Correct answer: <b>${q.answer}</b></span></div>`;
+    body+=`<div class="expl"><b>Why:</b> ${q.explanation}</div>`;
+    return `<div class="rev ${cls}" id="rev${i+1}"><div class="hd"><span><span class="qnum">${i+1}</span> <span class="mark">${mark}</span>${it.hintUsed?'<span class="chip">hint used</span>':""}</span><span class="skilltag">${esc(SKILLNAME[q.skillCode])} · ${q.level}</span></div>${body}</div>`; }).join("");
+  const bl=r.items.filter(i=>!i.userAnswer).length;
+  return `<div class="screen"><div class="card"><div class="hero"><div class="emoji">${emoji}</div><div class="kicker">Day ${DAY} complete</div>
+  <h1 id="scoreLine">${r.correctCount} / ${r.total} correct</h1>
+  <div class="stats"><div class="stat">Points<b id="points">${r.score} / ${r.maxScore}</b>2 = right, 1 = right with hint</div>
+  <div class="stat">Time<b>${fmt(r.elapsedSec)}</b>${r.overTime?"over 15:00 – keep practising speed":"within 15:00 ✓"}</div>
+  <div class="stat">Blanks<b>${bl}</b>${bl?"remember: always guess!":"no blanks – great habit!"}</div></div></div>
+  ${(S.levelUps&&S.levelUps.length)?`<div class="levelup" id="levelUp"><b>🎉 Level up!</b> ${S.levelUps.map(u=>`${esc(SKILLNAME[u.skill])}: ${u.from} → <b>${u.to}</b>`).join(" · ")}<div class="small">Tomorrow's questions on ${S.levelUps.length>1?"these topics":"this topic"} will be a step harder.</div></div>`:""}
+  <div class="send"><a class="btn big" id="mailBtn" href="#">📧 Send my results to Mum</a><button class="btn ghost big" id="copyBtn">📋 Copy results</button></div>
+  <p class="small" style="text-align:center">If the email button doesn't open an email app, press <b>Copy results</b> and paste them into a message to Mum.</p>
+  <h2 style="margin-top:22px">Answers &amp; explanations</h2>
+  ${cards}
+  <label class="small" for="codeBox">Results code (for Mum):</label><textarea class="code" id="codeBox" readonly>${esc(resultsBlock(0))}</textarea>
+  <div style="text-align:center;margin-top:18px"><button class="link" id="resetBtn">Start Day ${DAY} again</button></div></div></div>`;
+}
+function bindDone(){
+  $("mailBtn").setAttribute("href", mailtoHref());
+  $("copyBtn").onclick=async()=>{ const txt=copyText(); let ok=false;
+    try{ await navigator.clipboard.writeText(txt); ok=true; }catch(e){}
+    if(!ok){ const ta=$("codeBox"); ta.value=txt; ta.focus(); ta.select(); try{ ok=document.execCommand("copy"); }catch(e){} }
+    toast(ok?"Results copied! Paste them into a message to Mum.":"Select the results code below and copy it."); };
+  $("resetBtn").onclick=()=>{ openModal(`<h3>Start again?</h3><p>This deletes today's answers on this device. Only do this after Mum has your results.</p><div class="row"><button class="btn ghost" onclick="closeModal()">Keep them</button><button class="btn warn" id="mReset">Delete and restart</button></div>`);
+    $("mReset").onclick=()=>{ closeModal(); S=fresh(); save(); render(); }; };
+}
+
+/* ---------- calculator (same as the diagnostic) ---------- */
+const CK=[["7","8","9","÷","("],["4","5","6","×",")"],["1","2","3","−","^"],["0",".","π","+","√"],["C","⌫","±","="]];
+function buildCalc(){
+  const k=$("calcKeys"); k.innerHTML="";
+  CK.flat().forEach(c=>{ const b=document.createElement("button"); b.textContent=c; b.type="button";
+    if("÷×−+^√()π±".includes(c)) b.className="op"; if(c==="=") b.className="eq"; b.onclick=()=>calcKey(c); k.appendChild(b); });
+  $("calcIn").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); calcKey("="); } });
+}
+function calcEval(src){
+  let s=src.replace(/×/g,"*").replace(/÷/g,"/").replace(/[−–]/g,"-").replace(/π/g,"PI").replace(/√/g,"sqrt").replace(/\^/g,"**").replace(/\s+/g,"");
+  s=s.replace(/(\d|\)|PI)(?=\(|PI|sqrt)/g,"$1*"); s=s.replace(/sqrt(\d+(?:\.\d+)?|PI)/g,"sqrt($1)");
+  if(!/^[0-9.+\-*/()]*$/.test(s.replace(/sqrt|PI/g,""))) throw new Error("bad");
+  const v=Function("sqrt","PI",'"use strict";return ('+s+');')(Math.sqrt,Math.PI);
+  if(typeof v!=="number"||!isFinite(v)) throw new Error("bad"); return Math.round(v*1e10)/1e10;
+}
+function calcKey(c){
+  const inp=$("calcIn");
+  if(c==="C"){ inp.value=""; $("calcRes").textContent=""; }
+  else if(c==="⌫"){ inp.value=inp.value.slice(0,-1); }
+  else if(c==="="){ try{ const v=calcEval(inp.value); $("calcRes").textContent=inp.value+" ="; inp.value=String(v); }catch(e){ $("calcRes").textContent="Error – check your brackets"; } }
+  else if(c==="±"){ inp.value = inp.value.startsWith("−(")&&inp.value.endsWith(")") ? inp.value.slice(2,-1) : (inp.value?"−("+inp.value+")":"−"); }
+  else if(c==="√"){ inp.value+="√("; } else inp.value+=c;
+}
+function toggleCalc(force){ const c=$("calc"); const show = force===undefined ? c.classList.contains("hidden") : force; c.classList.toggle("hidden",!show); if(show) $("calcIn").focus({preventScroll:true}); }
+
+S=load(); buildCalc(); render(); ensureTick();
+document.addEventListener("visibilitychange",tick);
+window.__drill={get S(){return S;}, mailtoHref, copyText, ITEMS};
+</script>
+</body>
+</html>
